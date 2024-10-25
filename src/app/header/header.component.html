@@ -1,1 +1,12 @@
-<p>header works!</p>
+<section class="header-component">
+    <div class="logo-content">
+        <a routerLink="home">
+            <img [src]="'assets/lorem-logo.jpg'" alt="lorem" id="loremLogo">
+        </a>
+    </div>
+    
+    <div class="menu-bar">
+        <a routerLink="/content" id="contentBar">Content</a>
+        <a routerLink="playlist" id="playlistBar">Playlist</a>
+    </div>
+</section>

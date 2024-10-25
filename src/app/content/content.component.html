@@ -1,0 +1,23 @@
+<section class="content-whole-page">
+    <section class="get-content-container">
+
+            <div class="btn-container">
+                <a id="addContentBtn" (click)="addFileHandler()">
+                    Add
+                    <i id="plusIcon" class="fas fa-plus"></i>
+                </a>
+                <input type="file" id="fileInput" (change)="redirectFileHandler($event)" accept="image/*" hidden>
+            </div>
+            <div class="saved-content">
+                <p> saved content</p>
+                <div id="content"></div>
+            </div>
+
+    </section>
+    <section class="show-content-container">
+        <div>
+            <p>Visually showing content.</p>
+        </div>
+    </section>
+</section>
+
