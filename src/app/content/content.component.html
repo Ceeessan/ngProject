@@ -1,6 +1,5 @@
 <section class="content-whole-page">
     <section class="get-content-container">
-
             <div class="btn-container">
                 <a id="addContentBtn" (click)="addFileHandler()">
                     Add
@@ -9,15 +8,23 @@
                 <input type="file" id="fileInput" (change)="redirectFileHandler($event)" accept="image/*" hidden>
             </div>
             <div class="saved-content">
-                <p> saved content</p>
-                <div id="content"></div>
+                <p id="titleForContent"> Saved content</p>
+                <ul id="contentListUL">
+                    <li id="contentListLI" *ngFor="let content of savedContent">
+                        <i id="folderIcon" class="fas fa-folder"></i>
+                        <span id="urlString" title="{{content.url}}"> {{content.url}} </span>
+                        <span id="nameContent" title="{{content.name}}"> {{content.name}} </span>
+                        <a id="trashIcon" (click)="deleteContentFile(content)"><i class="fa fa-trash"></i></a>
+                    </li>
+                </ul>
             </div>
-
     </section>
     <section class="show-content-container">
-        <div>
-            <p>Visually showing content.</p>
-        </div>
+            <div class="handle-content-panel">
+                <button (click)="handleSaveContent()" id="saveContent">Save</button>
+                <button (click)="handleDeleteContent()" id="deleteContent">Delete</button>
+            </div>     
+            <div id="content"></div>   
     </section>
 </section>
 

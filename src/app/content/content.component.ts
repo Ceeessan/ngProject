@@ -1,19 +1,32 @@
 import { Component } from '@angular/core';
+import { SavedContent } from './content.interface';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [],
+  imports: [ CommonModule ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
+
 export class ContentComponent {
+  savedContent : SavedContent[] = [];
+  selectedContent?: SavedContent;
 
   constructor() {}
 
   addFileHandler() {
     const addFile = document.getElementById('fileInput') as HTMLInputElement;
     addFile.click();
+  }
+
+  setStyleOnContent(element: HTMLImageElement | HTMLVideoElement){
+          element.style.maxWidth = '90%';
+          element.style.maxHeight = '90%';
+          element.style.objectFit = 'contain';
+          element.style.objectPosition = 'center';    
   }
 
   redirectFileHandler(fileEvent: Event){
@@ -24,9 +37,60 @@ export class ContentComponent {
       console.log('Selected file', file);
 
       const content = document.getElementById('content') as HTMLDivElement;
+      content.innerHTML = ''; 
+      const fileType = file.type;
 
-      content.textContent = file;
+      const uniqueId = `file-${Date.now()}-${Math.random()}`;
+      
+
+      if (fileType.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.id= "contentImg";
+          this.setStyleOnContent(img);
+          img.src = URL.createObjectURL(file);
+
+          this.selectedContent ={ id: uniqueId, name: file.name, url: img.src, type: 'image' };
+          content.appendChild(img);
+
+      } else if (fileType.startsWith('video/')) {
+          const video = document.createElement('video');
+          video.id= "contentVideo";
+          this.setStyleOnContent(video);
+          video.src = URL.createObjectURL(file);
+
+          this.selectedContent = { id: uniqueId, name: file.name, url: video.src, type: 'video' };
+          content.appendChild(video); 
+
+      } else {
+          content.textContent += `\nFile type not supported for preview: ${fileType}`;
+      }
     }
   }
 
+  handleSaveContent (): void {
+
+    if(this.selectedContent){
+      this.savedContent.push(this.selectedContent);
+      console.log('saved', this.savedContent); 
+      this.selectedContent = undefined;
+      
+    }
+  }
+
+  handleDeleteContent() {}
+
+  deleteContentFile(content : SavedContent): void{
+    const confirmed = window.confirm('säker?');
+
+    if (confirmed){
+      this.savedContent = this.savedContent.filter( item => item.id !== content.id)
+    } else {
+      console.log('Deletion canceled.');
+    } 
+  }
 }
+
+confirmPopUp() {
+  
+}
+
