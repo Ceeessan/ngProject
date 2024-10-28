@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { SavedContent } from './content.interface';
 import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmComponent } from '../confirm/confirm.component';
+
 
 
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [ CommonModule, ConfirmComponent ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
@@ -15,7 +18,9 @@ export class ContentComponent {
   savedContent : SavedContent[] = [];
   selectedContent?: SavedContent;
 
-  constructor() {}
+  constructor(
+    private dialog: MatDialog
+  ) {}
 
   addFileHandler() {
     const addFile = document.getElementById('fileInput') as HTMLInputElement;
@@ -77,20 +82,23 @@ export class ContentComponent {
     }
   }
 
-  handleDeleteContent() {}
+  handleDeleteContent() {
+    
+  }
 
   deleteContentFile(content : SavedContent): void{
-    const confirmed = window.confirm('säker?');
+    const confirmRef = this.dialog.open(ConfirmComponent);
 
-    if (confirmed){
-      this.savedContent = this.savedContent.filter( item => item.id !== content.id)
-    } else {
-      console.log('Deletion canceled.');
-    } 
-  }
+    confirmRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.savedContent = this.savedContent.filter(item => item.id !== content.id);
+        console.log('Deleted content with ID:', content.id);
+      } else {
+        console.log('Deletion canceled.');
+      }
+    })
+}
 }
 
-confirmPopUp() {
-  
-}
+
 
