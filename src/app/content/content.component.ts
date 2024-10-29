@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SavedContent } from './content.interface';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../confirm/confirm.component';
+import { take } from 'rxjs';
 
 
 
@@ -15,23 +16,18 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 })
 
 export class ContentComponent {
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
   savedContent : SavedContent[] = [];
   selectedContent?: SavedContent;
+  contentType: 'image' | 'video' | 'invalid' | 'noContent' = 'noContent';
+  showContent: boolean = true;
 
   constructor(
     private dialog: MatDialog
   ) {}
 
   addFileHandler() {
-    const addFile = document.getElementById('fileInput') as HTMLInputElement;
-    addFile.click();
-  }
-
-  setStyleOnContent(element: HTMLImageElement | HTMLVideoElement){
-          element.style.maxWidth = '90%';
-          element.style.maxHeight = '90%';
-          element.style.objectFit = 'contain';
-          element.style.objectPosition = 'center';    
+    this.fileInput.nativeElement.click();
   }
 
   redirectFileHandler(fileEvent: Event){
@@ -39,57 +35,70 @@ export class ContentComponent {
 
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      console.log('Selected file', file);
-
-      const content = document.getElementById('content') as HTMLDivElement;
-      content.innerHTML = ''; 
       const fileType = file.type;
-
       const uniqueId = `file-${Date.now()}-${Math.random()}`;
-      
 
-      if (fileType.startsWith('image/')) {
-          const img = document.createElement('img');
-          img.id= "contentImg";
-          this.setStyleOnContent(img);
-          img.src = URL.createObjectURL(file);
+      switch(true) {
+        case fileType.startsWith('image/'):
+        const imgUrl = URL.createObjectURL(file);
+        this.selectedContent = { id: uniqueId, name: file.name, url: imgUrl, type: 'image' };
+        this.contentType = 'image';
+        this.showContent= true;
+        break;
 
-          this.selectedContent ={ id: uniqueId, name: file.name, url: img.src, type: 'image' };
-          content.appendChild(img);
+        case fileType.startsWith('video/'):
+          const videoUrl = URL.createObjectURL(file);
+          this.selectedContent = { id: uniqueId, name: file.name, url: videoUrl, type: 'video' };
+          this.contentType = 'video';
+          this.showContent= true;
+          break;
 
-      } else if (fileType.startsWith('video/')) {
-          const video = document.createElement('video');
-          video.id= "contentVideo";
-          this.setStyleOnContent(video);
-          video.src = URL.createObjectURL(file);
-
-          this.selectedContent = { id: uniqueId, name: file.name, url: video.src, type: 'video' };
-          content.appendChild(video); 
-
-      } else {
-          content.textContent += `\nFile type not supported for preview: ${fileType}`;
+        default :
+        this.selectedContent = { id: uniqueId, name: file.name, url: '', type: 'invalid' };
+        this.contentType = 'invalid';
+        this.showContent=true;
+        break;
       }
     }
   }
 
   handleSaveContent (): void {
-
     if(this.selectedContent){
       this.savedContent.push(this.selectedContent);
-      console.log('saved', this.savedContent); 
+
       this.selectedContent = undefined;
-      
+      this.showContent= false;
     }
   }
 
-  handleDeleteContent() {
-    
+  handleDeleteContent(): void {
+    const confirmRemove = this.dialog.open(ConfirmComponent);
+
+    if(this.showContent === true){
+      confirmRemove.afterClosed().pipe(take(1)).subscribe( result => {
+        if ( result === true){
+          this.showContent = false;
+          this.selectedContent = undefined;
+        } else {
+          console.log('Deletion canceled');
+        }
+      })
+    } else {
+      console.log('No content to delete');
+    }
+
+  }
+
+  showContentFile() {
+    if (this.selectedContent){
+      this.showContent = true;
+    }
   }
 
   deleteContentFile(content : SavedContent): void{
     const confirmRef = this.dialog.open(ConfirmComponent);
 
-    confirmRef.afterClosed().subscribe(result => {
+    confirmRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result === true) {
         this.savedContent = this.savedContent.filter(item => item.id !== content.id);
         console.log('Deleted content with ID:', content.id);
@@ -97,7 +106,7 @@ export class ContentComponent {
         console.log('Deletion canceled.');
       }
     })
-}
+  }
 }
 
 

@@ -1,0 +1,36 @@
+mat-dialog-content{
+  p{
+    font-size: 1.05rem;
+    padding-bottom: 1rem;
+  }
+}
+
+mat-dialog-actions{
+  #cancelBtn{
+    width: 5rem;
+    height:2.5rem;
+    border:none;
+    margin-bottom: 4rem;
+    background-color: rgb(47, 47, 92);
+    font-size:1.05rem;
+    align-items: center;
+    border-radius: 3%;
+    color: white;
+    cursor:pointer;
+    margin:0.5rem;
+  }
+
+  #deleteBtn{
+    width: 5rem;
+    height:2.5rem;
+    margin-bottom: 4rem;
+    border:none;
+    background-color: rgb(99, 153, 99);
+    font-size:1.05rem;
+    align-items: center;
+    border-radius: 3%;
+    color: white;
+    cursor:pointer;
+    margin:0.5rem;
+  }
+}

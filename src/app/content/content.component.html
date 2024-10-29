@@ -5,12 +5,12 @@
                     Add
                     <i id="plusIcon" class="fas fa-plus"></i>
                 </a>
-                <input type="file" id="fileInput" (change)="redirectFileHandler($event)" accept="image/*" hidden>
+                <input type="file" #fileInput id="fileInput" (change)="redirectFileHandler($event)" accept="image/*, video/*"  hidden>
             </div>
             <div class="saved-content">
                 <p id="titleForContent"> Saved content</p>
                 <ul id="contentListUL">
-                    <li id="contentListLI" *ngFor="let content of savedContent">
+                    <li id="contentListLI" *ngFor="let content of savedContent" (click)="showContentFile()">
                         <i id="folderIcon" class="fas fa-folder"></i>
                         <span id="urlString" title="{{content.url}}"> {{content.url}} </span>
                         <span id="nameContent" title="{{content.name}}"> {{content.name}} </span>
@@ -19,12 +19,31 @@
                 </ul>
             </div>
     </section>
+
     <section class="show-content-container">
             <div class="handle-content-panel">
                 <button (click)="handleSaveContent()" id="saveContent">Save</button>
                 <button (click)="handleDeleteContent()" id="deleteContent">Delete</button>
-            </div>     
-            <div id="content"></div>   
+            </div>
+
+            <div *ngSwitch="contentType" id="content">
+              <div *ngIf="showContent">
+                <ng-container id="imageContent" *ngSwitchCase = "'image'" >
+                  <img [src]="selectedContent?.url" alt="Selected content img">
+                </ng-container>
+
+                <ng-container id="videoContent" *ngSwitchCase = "'video'" >
+                  <video [src]="selectedContent?.url" controls></video>
+                </ng-container>
+
+                <ng-container id="invalidContent" *ngSwitchCase = "'invalid'" >
+                  <p> Sorry! The content did not work to upload. </p>
+                </ng-container>
+
+                <ng-container id="noContentDefault" *ngSwitchCase = "'noContent'" >
+                </ng-container>
+              </div>
+            </div>
     </section>
 </section>
 
