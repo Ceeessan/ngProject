@@ -5,12 +5,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { take } from 'rxjs';
 
-
-
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [ CommonModule, ConfirmComponent ],
+  imports: [ CommonModule, ConfirmComponent,  ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
@@ -20,7 +18,8 @@ export class ContentComponent {
   savedContent : SavedContent[] = [];
   selectedContent?: SavedContent;
   contentType: 'image' | 'video' | 'invalid' | 'noContent' = 'noContent';
-  showContent: boolean = true;
+  showContent: boolean = false;
+  showModal: boolean = false;
 
   constructor(
     private dialog: MatDialog
@@ -43,6 +42,7 @@ export class ContentComponent {
         const imgUrl = URL.createObjectURL(file);
         this.selectedContent = { id: uniqueId, name: file.name, url: imgUrl, type: 'image' };
         this.contentType = 'image';
+        console.log("contentttttt" , this.contentType);
         this.showContent= true;
         break;
 
@@ -72,9 +72,11 @@ export class ContentComponent {
   }
 
   handleDeleteContent(): void {
+
+    
+    if(this.showContent === true){
     const confirmRemove = this.dialog.open(ConfirmComponent);
 
-    if(this.showContent === true){
       confirmRemove.afterClosed().pipe(take(1)).subscribe( result => {
         if ( result === true){
           this.showContent = false;
@@ -86,7 +88,6 @@ export class ContentComponent {
     } else {
       console.log('No content to delete');
     }
-
   }
 
   showContentFile() {

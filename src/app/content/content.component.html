@@ -26,7 +26,7 @@
                 <button (click)="handleDeleteContent()" id="deleteContent">Delete</button>
             </div>
 
-            <div *ngSwitch="contentType" id="content">
+            <div [ngSwitch]="contentType" id="content">
               <div *ngIf="showContent">
                 <ng-container id="imageContent" *ngSwitchCase = "'image'" >
                   <img [src]="selectedContent?.url" alt="Selected content img">
