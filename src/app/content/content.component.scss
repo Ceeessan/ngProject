@@ -54,36 +54,52 @@
                     display:flex;
                     flex-direction: column;
                     text-align: left;
+                    padding:1rem;
 
                     #contentListLI{
                         display:flex;
                         flex-direction:row;
+                        justify-content: space-around;
                         align-items:center;
+                        text-align:center;
                         padding:1rem;
                         border-bottom: 1px solid rgb(179, 179, 179);
                         cursor:pointer;
 
                         #folderIcon{
-                            width: 3rem;
-                            padding-right:3rem;
                             color: rgb(99, 153, 99);
-                            font-size: 1.2rem;
                         }
 
-                        #urlString{
-                            width: 30rem;
-                            overflow: hidden;
-                            white-space: nowrap;
-                            text-overflow: ellipsis;
-                            padding-right: 3rem;
+                        .fa-folder:before {
+                            font-size: 2.5rem;
                         }
+
+                        .list-image-name{
+                            display:flex;
+                            flex-direction:row;
+                            align-items:center;
+                            justify-content: space-between;
+                            width: 8rem;
+
+
+                            #urlVideo,
+                            #urlImg{
+                                width: 4rem;
+                                height: 4rem;
+                                object-fit: contain;
+                                object-position: center;
+                                border: 2px solid rgb(83, 83, 83);
+                            }
+                        }
+
+                 
 
                         #nameContent{
                             width: 20rem;
                             overflow: hidden;
                             white-space: nowrap;
                             text-overflow: ellipsis;
-                            padding-right: 3rem;
+                            
                         }
 
                         #trashIcon{
@@ -123,6 +139,24 @@
                 font-size:1.05rem;
             }
 
+            .input-validator{
+                display:flex;
+                flex-direction:column;
+                padding-top:2rem;
+
+                #nameContentInput{
+                    height: 1.8rem;
+                    width: 20rem;
+                }
+    
+                #errorMessage{
+                    color:rgb(182, 0, 0);
+                    font-size: 0.8rem;
+                }
+            }
+
+ 
+
             #deleteContent{
                 width: 5rem;
                 height:2.5rem;
@@ -141,22 +175,15 @@
             justify-content: center;
             align-items:center;
             margin:auto;
-            width:50rem;
-            height: 40rem;
+            margin-top:2rem;
             overflow:hidden;
 
-            #imageContent{
-              max-width: 90%;
-              max-height: 90%;
-              object-fit: contain;
-              object-position: center;
-            }
-
+            #imageContent,
             #videoContent{
-              max-width: 90%;
-              max-height: 90%;
-              object-fit: contain;
-              object-position: center;
+                width:35rem;
+                height: 32rem;
+                object-fit: contain;
+                object-position: center;
             }
 
             #invalidContent{
@@ -165,6 +192,8 @@
 
             #noContent{
               display:none;
+              width: 20rem;
+              height:20rem;
             }
         }
     }

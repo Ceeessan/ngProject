@@ -3,5 +3,5 @@ export interface SavedContent {
     name: string;
     url: string;
     type:string;
+    listContentName: string;
   }
-  

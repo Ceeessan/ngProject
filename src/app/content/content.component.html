@@ -12,8 +12,21 @@
                 <ul id="contentListUL">
                     <li id="contentListLI" *ngFor="let content of savedContent" (click)="showContentFile()">
                         <i id="folderIcon" class="fas fa-folder"></i>
-                        <span id="urlString" title="{{content.url}}"> {{content.url}} </span>
-                        <span id="nameContent" title="{{content.name}}"> {{content.name}} </span>
+                        <div class="list-image-name" [ngSwitch]="contentType">
+                          <img 
+                          id="urlImg" 
+                          [src]="content.url"
+                          *ngSwitchCase = "'image'"  
+                          title="{{content.url}}"/>
+                          {{ content.type }}
+                          <video 
+                          id="urlVideo" 
+                          [src]="content.url" 
+                          *ngSwitchCase = "'video'" 
+                          title="{{content.url}}">
+                      </video>
+                        </div>
+                        <span id="nameContent" title="{{content.listContentName}}"> {{ 'Folder Name: ' + content.listContentName}} </span>
                         <a id="trashIcon" (click)="deleteContentFile(content)"><i class="fa fa-trash"></i></a>
                     </li>
                 </ul>
@@ -23,17 +36,21 @@
     <section class="show-content-container">
             <div class="handle-content-panel">
                 <button (click)="handleSaveContent()" id="saveContent">Save</button>
+                <div class="input-validator" *ngIf="showListContentName">
+                  <input id="nameContentInput" type="text" [formControl]="listContentName" placeHolder="Name your content" required valid/>
+                  <em id="errorMessage" *ngIf="listContentName.invalid && (listContentName.touched || saveAttempt)">Name on your content is required</em>
+                </div>
                 <button (click)="handleDeleteContent()" id="deleteContent">Delete</button>
             </div>
 
             <div [ngSwitch]="contentType" id="content">
               <div *ngIf="showContent">
-                <ng-container id="imageContent" *ngSwitchCase = "'image'" >
-                  <img [src]="selectedContent?.url" alt="Selected content img">
+                <ng-container  *ngSwitchCase = "'image'" >
+                  <img id="imageContent" [src]="selectedContent?.url" alt="Selected content img">
                 </ng-container>
 
-                <ng-container id="videoContent" *ngSwitchCase = "'video'" >
-                  <video [src]="selectedContent?.url" controls></video>
+                <ng-container  *ngSwitchCase = "'video'" >
+                  <video id="videoContent" [src]="selectedContent?.url"></video>
                 </ng-container>
 
                 <ng-container id="invalidContent" *ngSwitchCase = "'invalid'" >

@@ -4,26 +4,36 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { take } from 'rxjs';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [ CommonModule, ConfirmComponent,  ],
+  imports: [ 
+    CommonModule, 
+    ConfirmComponent, 
+    ReactiveFormsModule, 
+  ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
 
 export class ContentComponent {
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
+
   savedContent : SavedContent[] = [];
-  selectedContent?: SavedContent;
+  selectedContent?:SavedContent;
+
   contentType: 'image' | 'video' | 'invalid' | 'noContent' = 'noContent';
+
   showContent: boolean = false;
   showModal: boolean = false;
+  showListContentName: boolean = false;
+  saveAttempt:boolean = false;
 
-  constructor(
-    private dialog: MatDialog
-  ) {}
+  listContentName = new FormControl('', [Validators.required]);
+
+  constructor( private dialog: MatDialog ) {}
 
   addFileHandler() {
     this.fileInput.nativeElement.click();
@@ -36,44 +46,60 @@ export class ContentComponent {
       const file = input.files[0];
       const fileType = file.type;
       const uniqueId = `file-${Date.now()}-${Math.random()}`;
+      const fileUrl = URL.createObjectURL(file);
+      
 
       switch(true) {
         case fileType.startsWith('image/'):
-        const imgUrl = URL.createObjectURL(file);
-        this.selectedContent = { id: uniqueId, name: file.name, url: imgUrl, type: 'image' };
         this.contentType = 'image';
-        console.log("contentttttt" , this.contentType);
         this.showContent= true;
+        this.showListContentName = true;
+        this.selectedContent = { id: uniqueId, name: file.name, url: fileUrl, type: 'image', listContentName: '' };
         break;
 
         case fileType.startsWith('video/'):
-          const videoUrl = URL.createObjectURL(file);
-          this.selectedContent = { id: uniqueId, name: file.name, url: videoUrl, type: 'video' };
           this.contentType = 'video';
           this.showContent= true;
+          this.showListContentName = true;
+          this.selectedContent = { id: uniqueId, name: file.name, url: fileUrl, type: 'video', listContentName:  '' };
           break;
 
         default :
-        this.selectedContent = { id: uniqueId, name: file.name, url: '', type: 'invalid' };
         this.contentType = 'invalid';
         this.showContent=true;
+        this.selectedContent = { id: uniqueId, name: file.name, url: '', type: 'invalid', listContentName: '' };
         break;
       }
     }
   }
 
-  handleSaveContent (): void {
-    if(this.selectedContent){
-      this.savedContent.push(this.selectedContent);
-
-      this.selectedContent = undefined;
-      this.showContent= false;
+  updateListContentName(): void {
+    if (this.selectedContent) {
+      this.selectedContent.listContentName = this.listContentName.value || ''; 
     }
   }
 
-  handleDeleteContent(): void {
+  handleSaveContent (): void {
+    console.log(this.selectedContent);
+    if(this.listContentName.valid){
+      this.updateListContentName();
+      if(this.selectedContent){
+        this.savedContent.push(this.selectedContent);
+  
+        this.selectedContent = undefined;
+        this.showContent= false;
+        this.showListContentName = false;
+        this.listContentName.reset();
+        this.saveAttempt = false;
+      }
+    } else if (this.listContentName.invalid) {
+      this.saveAttempt = true;
+      this.listContentName.reset();
+    }
 
-    
+  }
+
+  handleDeleteContent(): void {
     if(this.showContent === true){
     const confirmRemove = this.dialog.open(ConfirmComponent);
 
