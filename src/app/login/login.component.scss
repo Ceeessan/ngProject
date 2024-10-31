@@ -1,0 +1,25 @@
+section{
+
+    .opacity-fade{
+            background-color: rgba(0, 0, 0, 0.5); 
+            height: 90vh; 
+            width: 100%;
+            color: white; 
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+
+            .modal-login{
+                display:flex;
+                flex-direction:center;
+                align-items:center;
+                width: 18rem;
+                height: 22rem;
+                background-color:white;
+
+                #login-text{
+                    color: black;
+                }
+            }
+    }
+}
