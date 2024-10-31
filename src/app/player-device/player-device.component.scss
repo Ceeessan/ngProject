@@ -1,0 +1,33 @@
+#playerDeviceTitle{
+    height: 3rem;
+    text-align: center;
+}
+
+.player-device-page{
+    display:flex;
+    flex-direction:row;
+    width: 100%;
+
+    .list-side{
+        width: 20%;
+        height: 100vh;
+        border: 1px solid grey;
+    }
+
+    .play-content-side{
+        width: 80%;
+        height: 100vh;
+
+        #showingContent{
+            border: 1px solid grey;
+            width: 100%;
+            height: 20rem;
+        }
+
+        #editingPanel{
+            border: 1px solid grey;
+            width: 100%;
+            height: 35rem;;
+        }
+    }
+}
