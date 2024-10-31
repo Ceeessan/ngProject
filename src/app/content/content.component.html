@@ -1,7 +1,7 @@
 <section class="content-whole-page">
     <section class="get-content-container">
             <div class="btn-container">
-                <a id="addContentBtn" (click)="addFileHandler()">
+                <a title="Add content" id="addContentBtn" (click)="addFileHandler()">
                     Add
                     <i id="plusIcon" class="fas fa-plus"></i>
                 </a>
@@ -13,21 +13,26 @@
                     <li id="contentListLI" *ngFor="let content of savedContent" (click)="showContentFile()">
                         <i id="folderIcon" class="fas fa-folder"></i>
                         <div class="list-image-name" [ngSwitch]="contentType">
-                          <img 
-                          id="urlImg" 
-                          [src]="content.url"
-                          *ngSwitchCase = "'image'"  
-                          title="{{content.url}}"/>
-                          {{ content.type }}
-                          <video 
-                          id="urlVideo" 
-                          [src]="content.url" 
-                          *ngSwitchCase = "'video'" 
-                          title="{{content.url}}">
-                      </video>
+                          <div *ngSwitchCase = "'image'" >
+                            <img 
+                            id="urlImg" 
+                            [src]="content.url"
+                            title="{{content.url}}"/>
+                          </div>
+                          <div *ngSwitchCase = "'video'" >
+                            <video 
+                            id="urlVideo" 
+                            [src]="content.url"  
+                            title="{{content.url}}">
+                        </video>
+                          </div>
+                          <p id="contentTypeName">
+                            {{ content.type.toUpperCase() }}
+                          </p>         
                         </div>
-                        <span id="nameContent" title="{{content.listContentName}}"> {{ 'Folder Name: ' + content.listContentName}} </span>
-                        <a id="trashIcon" (click)="deleteContentFile(content)"><i class="fa fa-trash"></i></a>
+                        <span id="nameContent" title="{{content.listContentName}}"> {{ 'Name: ' + content.listContentName}} </span>
+                        <a title="Edit content" id=" editIcon" (click)="editContentFromList(content)" ><i class="fas fa-edit"></i></a>
+                        <a title="Delete" id="trashIcon" (click)="deleteContentFile(content)"><i class="fa fa-trash"></i></a>
                     </li>
                 </ul>
             </div>
@@ -35,12 +40,12 @@
 
     <section class="show-content-container">
             <div class="handle-content-panel">
-                <button (click)="handleSaveContent()" id="saveContent">Save</button>
+                <button title="Save content" [disabled]="!selectedContent" (click)="handleSaveContent()" id="saveContent">Save</button>
                 <div class="input-validator" *ngIf="showListContentName">
                   <input id="nameContentInput" type="text" [formControl]="listContentName" placeHolder="Name your content" required valid/>
                   <em id="errorMessage" *ngIf="listContentName.invalid && (listContentName.touched || saveAttempt)">Name on your content is required</em>
                 </div>
-                <button (click)="handleDeleteContent()" id="deleteContent">Delete</button>
+                <button title="Delete content" [disabled]="!selectedContent" (click)="handleDeleteContent()" id="deleteContent">Delete</button>
             </div>
 
             <div [ngSwitch]="contentType" id="content">

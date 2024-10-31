@@ -23,14 +23,11 @@ export class ContentComponent {
 
   savedContent : SavedContent[] = [];
   selectedContent?:SavedContent;
-
   contentType: 'image' | 'video' | 'invalid' | 'noContent' = 'noContent';
-
   showContent: boolean = false;
   showModal: boolean = false;
   showListContentName: boolean = false;
   saveAttempt:boolean = false;
-
   listContentName = new FormControl('', [Validators.required]);
 
   constructor( private dialog: MatDialog ) {}
@@ -46,8 +43,7 @@ export class ContentComponent {
       const file = input.files[0];
       const fileType = file.type;
       const uniqueId = `file-${Date.now()}-${Math.random()}`;
-      const fileUrl = URL.createObjectURL(file);
-      
+      const fileUrl = URL.createObjectURL(file); 
 
       switch(true) {
         case fileType.startsWith('image/'):
@@ -80,7 +76,6 @@ export class ContentComponent {
   }
 
   handleSaveContent (): void {
-    console.log(this.selectedContent);
     if(this.listContentName.valid){
       this.updateListContentName();
       if(this.selectedContent){
@@ -91,11 +86,18 @@ export class ContentComponent {
         this.showListContentName = false;
         this.listContentName.reset();
         this.saveAttempt = false;
-      }
-    } else if (this.listContentName.invalid) {
+      } 
+    }  else if (this.listContentName.invalid) {
       this.saveAttempt = true;
       this.listContentName.reset();
     }
+  }
+
+  updateSavedContent() {
+
+  }
+
+  deleteSavedContent() {
 
   }
 
@@ -107,6 +109,9 @@ export class ContentComponent {
         if ( result === true){
           this.showContent = false;
           this.selectedContent = undefined;
+          this.showListContentName = false;
+          this.fileInput.nativeElement.value = '';
+          this.saveAttempt = false;
         } else {
           console.log('Deletion canceled');
         }
@@ -116,10 +121,17 @@ export class ContentComponent {
     }
   }
 
-  showContentFile() {
+  showContentFile(): void {
     if (this.selectedContent){
       this.showContent = true;
     }
+  }
+
+  editContentFromList(content : SavedContent): void {
+    this.selectedContent = content;
+    this.showContent = true;
+    this.showListContentName = true;
+    this.listContentName.setValue(content.listContentName);
   }
 
   deleteContentFile(content : SavedContent): void{

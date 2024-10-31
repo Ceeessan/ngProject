@@ -5,7 +5,7 @@
     height: 100vh;
 
     .get-content-container{
-        width: 50%;
+        width: 40%;
         border-right: 1px solid rgb(179, 179, 179);
 
         .btn-container{
@@ -47,6 +47,8 @@
                     padding-top: 1rem;
                     padding-bottom: 1rem;
                     font-size: 1.2rem;
+                    color: rgb(214, 214, 203);
+                    background-color: rgb(139, 137, 132);
                 }
 
                 #contentListUL{
@@ -54,7 +56,6 @@
                     display:flex;
                     flex-direction: column;
                     text-align: left;
-                    padding:1rem;
 
                     #contentListLI{
                         display:flex;
@@ -62,7 +63,7 @@
                         justify-content: space-around;
                         align-items:center;
                         text-align:center;
-                        padding:1rem;
+                        padding:0.5rem;
                         border-bottom: 1px solid rgb(179, 179, 179);
                         cursor:pointer;
 
@@ -71,7 +72,7 @@
                         }
 
                         .fa-folder:before {
-                            font-size: 2.5rem;
+                            font-size: 1.8rem;
                         }
 
                         .list-image-name{
@@ -81,31 +82,39 @@
                             justify-content: space-between;
                             width: 8rem;
 
-
                             #urlVideo,
                             #urlImg{
-                                width: 4rem;
-                                height: 4rem;
+                                width: 5rem;
+                                height: 5rem;
+                                padding:0.2rem;
                                 object-fit: contain;
                                 object-position: center;
-                                border: 2px solid rgb(83, 83, 83);
+                                border: 1px solid rgb(83, 83, 83);
+                            }
+
+                            #contentTypeName{
+                                padding-left:1rem;
+                                padding-top:0.6rem
                             }
                         }
-
-                 
 
                         #nameContent{
                             width: 20rem;
                             overflow: hidden;
                             white-space: nowrap;
-                            text-overflow: ellipsis;
-                            
+                            text-overflow: ellipsis;          
                         }
 
-                        #trashIcon{
-                            color: rgb(47, 47, 92);
-                            cursor: pointer;
+                        .fa-edit:before{
+                            color:  rgb(99, 153, 99);
+                            font-size:1.2rem;
+                            cursor:pointer;
+                        }
 
+                        .fa-trash:before {
+                            color: rgb(47, 47, 92);
+                            font-size:1.2rem;
+                            cursor: pointer;
                         }
                     }
                 }
@@ -116,7 +125,7 @@
     .show-content-container{
         display:flex;
         flex-direction: column;
-        width:50%;
+        width:60%;
 
         .handle-content-panel{
             display:flex;
@@ -139,6 +148,10 @@
                 font-size:1.05rem;
             }
 
+            #saveContent[disabled]{
+                background-color: rgb(182, 174, 174);
+            }
+
             .input-validator{
                 display:flex;
                 flex-direction:column;
@@ -155,8 +168,6 @@
                 }
             }
 
- 
-
             #deleteContent{
                 width: 5rem;
                 height:2.5rem;
@@ -167,6 +178,10 @@
                 color: white;
                 cursor:pointer;
                 font-size:1.05rem;
+            }
+
+            #deleteContent[disabled]{
+                background-color: grey;
             }
         }
 
