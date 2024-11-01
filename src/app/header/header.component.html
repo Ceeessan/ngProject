@@ -7,9 +7,9 @@
     </div>
     
     <div class="menu-bar">
-        <a routerLink="/content" id="contentBar">Content</a>
+        <a routerLink="content" id="contentBar">Content</a>
         <a routerLink="playlist" id="playlistBar">Playlist</a>
         <a routerLink="player-device" id="playerDeviceBar">Player Device</a>
-        <a routerLink="login" id="loginBar">Login!</a>
+        <a routerLink="login" id="loginBar" (click)="openModal()">Login!</a>
     </div>
 </section>

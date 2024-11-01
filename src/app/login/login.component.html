@@ -1,9 +1,22 @@
 <section>
-    <div class="opacity-fade">
-        <div class="modal-login">
-            <h4>Log in</h4>
-            <input type="text">
-            <input type="password">
+    <div class="opacity-fade" [ngClass]="{'active': isActive}" (click)="closeModal()">
+        <div class="modal-login" (click)="$event.stopPropagation()">
+            <h4 id="loginText">Log in to your account</h4>
+
+            <form (ngSubmit)="loginSubmit()">
+                <input [formControl]="loginName" required valid id="inputNameLogin" placeholder="Username" type="text">
+                <em *ngIf="loginName.invalid && loginName.dirty || loginName.touched" id="loginUserNameError">
+                    *Username is required
+                </em>
+    
+                <input [formControl]="loginPassword" required valid id="inputPasswordLogin" type="password" placeholder="Password">
+                <em *ngIf="loginPassword.invalid && loginPassword.dirty || loginPassword.touched" id="loginUserNameError">
+                    *Password is required
+                </em>
+    
+                <button id="loginBtn" type="submit">Login</button>
+            </form>
+            
         </div>
     </div>
 </section>

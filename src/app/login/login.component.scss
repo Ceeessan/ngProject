@@ -1,24 +1,97 @@
 section{
-
     .opacity-fade{
-            background-color: rgba(0, 0, 0, 0.5); 
-            height: 90vh; 
+            height: 100vh; 
             width: 100%;
             color: white; 
             display: flex;
             justify-content: center; 
             align-items: center; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px); 
+            z-index: 9999; 
+            visibility: hidden; 
+            opacity: 0;
+            transition: opacity 0.3s ease;
+
+            &.active {
+                visibility: visible;
+                opacity: 1;
+            }
 
             .modal-login{
                 display:flex;
-                flex-direction:center;
+                flex-direction: column;
                 align-items:center;
-                width: 18rem;
+                width: 20rem;
                 height: 22rem;
                 background-color:white;
+                border-radius: 0.5rem;
 
-                #login-text{
+                #loginText{
+                    display:flex;
+                    justify-content:center;
                     color: black;
+                    width:100%;
+                    font-size: 1rem;
+                    padding-top: 1.5rem;
+                    padding-bottom: 0.5rem;
+                    background-color: rgb(87, 79, 79);
+                    color: rgb(214, 214, 203);
+                    border-top-left-radius: 0.4rem;
+                    border-top-right-radius: 0.4rem;
+                }
+
+                #inputNameLogin{
+                    height: 2rem;
+                    width: 16rem;
+                    border-radius: 0.1rem;
+                    border: none;
+                    margin-top: 2rem;
+                    background-color:rgb(226, 226, 226);
+                }
+
+                #inputNameLogin::placeholder{
+                    padding-left: 0.2rem;
+                    color:rgb(148, 148, 148);
+                }
+
+                #loginUserNameError{
+                    font-size: 0.8rem;
+                    color:rgb(182, 0, 0);
+                    margin-right: 7.5rem;
+                    padding-top:0.5rem;
+                    display:block;
+                }
+
+                #inputPasswordLogin{
+                    height: 2rem;
+                    width: 16rem;
+                    border-radius: 0.1rem;
+                    border: none;
+                    background-color:rgb(226, 226, 226);
+                    margin-top: 1rem;
+                }
+
+                #inputPasswordLogin::placeholder{
+                    padding-left: 0.2rem;
+                    color:rgb(148, 148, 148);
+                }
+
+                #loginBtn{
+                    margin-top:2rem;
+                    width: 16rem;
+                    height: 2rem;
+                    border:none;
+                    background-color: rgb(196, 96, 112);
+                    color:white;
+                    font-weight: bold;
+                    border-radius: 0.1rem;
                 }
             }
     }
