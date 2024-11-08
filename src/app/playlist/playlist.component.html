@@ -26,11 +26,17 @@
         </ul>
     </div>
     <div class="playlist-content-container">
-        <div class="playlist-edit-panel">
-            <i title="Edit" class="far fa-edit"></i>
+        <div class="playlist-edit-panel" *ngIf="content">
+
+            <a title="Edit content" id=" editIcon" (click)="editContentFromList(content)" ><i class="fas fa-edit"></i></a>
             <i title="Schedule" class="far fa-calendar-alt"></i>
             <!-- <i title="Download" class="fas fa-download"></i> -->
             <button title="Continue" id="deletePanel">Continue</button>
+
+            <div class="input-validator" *ngIf="showListContentName">
+                <input id="nameContentInput" type="text" [formControl]="listContentName" placeHolder="Name your content" required valid/>
+                <em id="errorMessage" *ngIf="listContentName.invalid && (listContentName.touched || saveAttempt)">Name on your content is required</em>
+              </div>
         </div>
     </div>
 </section>

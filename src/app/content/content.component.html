@@ -11,7 +11,7 @@
                 <p id="titleForContent"> Saved content</p>
                 <ul id="contentListUL">
                     <li id="contentListLI" *ngFor="let content of savedContent" (click)="showContentFile()">
-                        <i id="folderIcon" class="fas fa-folder"></i>
+                        
                         <div class="list-image-name" [ngSwitch]="contentType">
                           <div *ngSwitchCase = "'image'" >
                             <img 
@@ -30,8 +30,8 @@
                             {{ content.type.toUpperCase() }}
                           </p>         
                         </div>
-                        <span id="nameContent" title="{{content.listContentName}}"> {{ 'Name: ' + content.listContentName}} </span>
-                        <a title="Edit content" id=" editIcon" (click)="editContentFromList(content)" ><i class="fas fa-edit"></i></a>
+                        <span id="nameContent" title="{{content.name}}"> {{ 'Name: ' + content.name}} </span>
+                        <i id="folderIcon" class="fas fa-folder"></i>
                         <a title="Delete" id="trashIcon" (click)="deleteContentFile(content)"><i class="fa fa-trash"></i></a>
                     </li>
                 </ul>
@@ -41,10 +41,7 @@
     <section class="show-content-container">
             <div class="handle-content-panel">
                 <button title="Save content" [disabled]="!selectedContent" (click)="handleSaveContent()" id="saveContent">Save</button>
-                <div class="input-validator" *ngIf="showListContentName">
-                  <input id="nameContentInput" type="text" [formControl]="listContentName" placeHolder="Name your content" required valid/>
-                  <em id="errorMessage" *ngIf="listContentName.invalid && (listContentName.touched || saveAttempt)">Name on your content is required</em>
-                </div>
+
                 <button title="Delete content" [disabled]="!selectedContent" (click)="handleDeleteContent()" id="deleteContent">Delete</button>
             </div>
 

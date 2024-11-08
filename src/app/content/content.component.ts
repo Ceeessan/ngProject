@@ -4,7 +4,10 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { take } from 'rxjs';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FileUploadService } from '../shared-services/services/file-upload.service';
+
+
 
 @Component({
   selector: 'app-content',
@@ -26,71 +29,78 @@ export class ContentComponent {
   contentType: 'image' | 'video' | 'invalid' | 'noContent' = 'noContent';
   showContent: boolean = false;
   showModal: boolean = false;
-  showListContentName: boolean = false;
-  saveAttempt:boolean = false;
-  listContentName = new FormControl('', [Validators.required]);
 
-  constructor( private dialog: MatDialog ) {}
+  constructor(private dialog: MatDialog,
+    private fileUploadService: FileUploadService
+  ) {}
+
+  // uploadService = inject(FileUploadService)
 
   addFileHandler() {
     this.fileInput.nativeElement.click();
   }
 
   redirectFileHandler(fileEvent: Event){
+    // this.uploadService.RedirectFileHandler(fileEvent)
     const input =fileEvent.target as HTMLInputElement;
+
+    console.log(input.files);
+    const file =input.files![0];
+    console.log(file.type);
+    const fileUrl = URL.createObjectURL(file);
+    console.log('file url',fileUrl);
 
     if (input.files && input.files[0]) {
       const file = input.files[0];
       const fileType = file.type;
-      const uniqueId = `file-${Date.now()}-${Math.random()}`;
+
+      //Set the id that saves in backend here
+      const uniqueId = ``;
       const fileUrl = URL.createObjectURL(file); 
 
       switch(true) {
         case fileType.startsWith('image/'):
         this.contentType = 'image';
         this.showContent= true;
-        this.showListContentName = true;
-        this.selectedContent = { id: uniqueId, name: file.name, url: fileUrl, type: 'image', listContentName: '' };
+        this.selectedContent = { 
+          id: uniqueId, 
+          name: file.name, 
+          type: 'image', 
+          url: fileUrl  };
         break;
 
         case fileType.startsWith('video/'):
           this.contentType = 'video';
           this.showContent= true;
-          this.showListContentName = true;
-          this.selectedContent = { id: uniqueId, name: file.name, url: fileUrl, type: 'video', listContentName:  '' };
+          this.selectedContent = { 
+            id: uniqueId, 
+            name: file.name, 
+            type: 'video', 
+            url: fileUrl};
           break;
 
         default :
         this.contentType = 'invalid';
         this.showContent=true;
-        this.selectedContent = { id: uniqueId, name: file.name, url: '', type: 'invalid', listContentName: '' };
+        this.selectedContent = { 
+          id: uniqueId, 
+          name: file.name, 
+          type: 'invalid', 
+          url: '',  };
         break;
       }
     }
   }
 
-  updateListContentName(): void {
-    if (this.selectedContent) {
-      this.selectedContent.listContentName = this.listContentName.value || ''; 
-    }
-  }
+
 
   handleSaveContent (): void {
-    if(this.listContentName.valid){
-      this.updateListContentName();
       if(this.selectedContent){
         this.savedContent.push(this.selectedContent);
-  
+
         this.selectedContent = undefined;
         this.showContent= false;
-        this.showListContentName = false;
-        this.listContentName.reset();
-        this.saveAttempt = false;
       } 
-    }  else if (this.listContentName.invalid) {
-      this.saveAttempt = true;
-      this.listContentName.reset();
-    }
   }
 
   updateSavedContent() {
@@ -109,9 +119,7 @@ export class ContentComponent {
         if ( result === true){
           this.showContent = false;
           this.selectedContent = undefined;
-          this.showListContentName = false;
           this.fileInput.nativeElement.value = '';
-          this.saveAttempt = false;
         } else {
           console.log('Deletion canceled');
         }
@@ -127,12 +135,7 @@ export class ContentComponent {
     }
   }
 
-  editContentFromList(content : SavedContent): void {
-    this.selectedContent = content;
-    this.showContent = true;
-    this.showListContentName = true;
-    this.listContentName.setValue(content.listContentName);
-  }
+
 
   deleteContentFile(content : SavedContent): void{
     const confirmRef = this.dialog.open(ConfirmComponent);
