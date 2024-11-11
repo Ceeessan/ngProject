@@ -7,7 +7,8 @@ import { ModalService } from '../modal.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ RouterModule,
+  imports: [ 
+    RouterModule,
     LoginComponent
   ],
   templateUrl: './header.component.html',

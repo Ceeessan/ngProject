@@ -1,0 +1,73 @@
+<section>
+        <div class="modal-register" (click)="$event.stopPropagation()">
+            <h4 id="registerText">Register</h4>
+
+            <form (ngSubmit)="createUserSubmit()" [formGroup]="registerForm">
+                <p id="importantMessage"> <span id="important">Important!</span>  
+                    This is not a real CMS and has fake emails and passwords. Please, do not implement important information about yourself!
+                </p>
+
+                <input 
+                formControlName="firstname" 
+                required 
+                valid 
+                id="firstnameRegister" 
+                placeholder="Firstname" 
+                type="text"
+                />
+                <em *ngIf="registerForm.get('firstname')!.invalid && registerForm.get('firstname')!.dirty || registerForm.get('firstname')!.touched"id="firstnameError">
+                    *Firstname is required
+                </em>
+    
+                <input 
+                formControlName="lastname" 
+                required 
+                valid 
+                id="lastnameRegister" 
+                type="text" 
+                placeholder="lastname"
+                />
+                <em *ngIf="registerForm.get('lastname')!.invalid && registerForm.get('lastname')!.dirty || registerForm.get('lastname')!.touched" id="lastnameError">
+                    *Lastname is required
+                </em>
+
+                <input 
+                formControlName="email" 
+                required 
+                valid 
+                id="emailRegister" 
+                type="text" 
+                placeholder="Emailaddress"
+                />
+                <em *ngIf="registerForm.get('email')!.invalid && registerForm.get('email')!.dirty || registerForm.get('email')!.touched" id="emailError">
+                    *Email is required
+                </em>
+
+                <input 
+                formControlName="password" 
+                required 
+                valid 
+                id="passwordRegister" 
+                type="password" 
+                placeholder="Password"
+                />
+                <em *ngIf="registerForm.get('password')!.invalid && registerForm.get('password')!.dirty || registerForm.get('password')!.touched" id="passwordError">
+                    *Password is required
+                </em>
+
+                <input 
+                formControlName="confirmpassword" 
+                required 
+                valid 
+                id="confirmPasswordRegister" 
+                type="password" 
+                placeholder="Confirm Password"
+                />
+                <em *ngIf="registerForm.get('password')!.invalid && registerForm.get('password')!.dirty || registerForm.get('password')!.touched" id="passwordError">
+                    *Password is required
+                </em>
+                <button id="registerBtn" type="submit">Register</button>
+            </form>
+            
+        </div>
+</section>

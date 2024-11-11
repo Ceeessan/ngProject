@@ -1,0 +1,170 @@
+section {
+    .modal-register {
+        margin:auto;
+        margin-top: 4rem;
+        display:flex;
+        flex-direction: column;
+        text-align:center;
+        align-items:center;
+        width: 25rem;
+        height: 32rem;
+        background-color:white;
+        border-radius: 0.5rem;
+
+        #registerText{
+            display:flex;
+            justify-content:center;
+            color: black;
+            width:100%;
+            font-size: 1rem;
+            padding-top: 1.5rem;
+            padding-bottom: 0.5rem;
+            background-color: rgb(87, 79, 79);
+            color: rgb(214, 214, 203);
+            border-top-left-radius: 0.4rem;
+            border-top-right-radius: 0.4rem;
+        }
+
+        #importantMessage{
+            text-align: center;
+            color:rgb(46, 46, 46);
+            font-size: 0.7rem;
+            font-weight: light;
+            line-height: 0.9rem;
+
+            #important{
+                display:flex;
+                justify-content: center;
+                flex-direction: column;
+                font-weight: bold;
+            }
+        }
+
+        #firstnameRegister{
+            height: 2rem;
+            width: 16rem;
+            border-radius: 0.1rem;
+            border: none;
+            margin-top: 1.5rem;
+            background-color:rgb(226, 226, 226);
+        }
+
+        #firstnameRegister::placeholder{
+            padding-left: 0.2rem;
+            color:rgb(148, 148, 148);
+        }
+
+        #firstnameError{
+            font-size: 0.7rem;
+            color:rgb(182, 0, 0);
+            margin-right: 8.2rem;
+            padding-top:0rem;
+            margin-bottom: -1rem;
+            display:block;
+        }
+
+        #lastnameRegister{
+            height: 2rem;
+            width: 16rem;
+            border-radius: 0.1rem;
+            border: none;
+            margin-top: 1rem;
+            background-color:rgb(226, 226, 226);
+        }
+
+        #lastnameRegister::placeholder{
+            padding-left: 0.2rem;
+            color:rgb(148, 148, 148);
+        }
+
+        #lastnameError{
+            font-size: 0.7rem;
+            color:rgb(182, 0, 0);
+            margin-right: 8.2rem;
+            padding-top:0rem;
+            margin-bottom: -1rem;
+            display:block;
+        }
+
+        #emailRegister{
+            height: 2rem;
+            width: 16rem;
+            border-radius: 0.1rem;
+            border: none;
+            margin-top: 1rem;
+            background-color:rgb(226, 226, 226);
+        }
+
+        #emailRegister::placeholder{
+            padding-left: 0.2rem;
+            color:rgb(148, 148, 148);
+        }
+
+        #emailError{
+            font-size: 0.7rem;
+            color:rgb(182, 0, 0);
+            margin-right: 8.2rem;
+            padding-top:0rem;
+            margin-bottom: -1rem;
+            display:block;
+        }
+
+        #passwordRegister{
+            height: 2rem;
+            width: 16rem;
+            border-radius: 0.1rem;
+            border: none;
+            margin-top: 1rem;
+            background-color:rgb(226, 226, 226);
+        }
+
+        #passwordRegister::placeholder{
+            padding-left: 0.2rem;
+            color:rgb(148, 148, 148);
+        }
+
+        #passwordError{
+            font-size: 0.7rem;
+            color:rgb(182, 0, 0);
+            margin-right: 8.2rem;
+            padding-top:0rem;
+            margin-bottom: -1rem;
+            display:block;
+        }
+
+        #confirmPasswordRegister{
+            height: 2rem;
+            width: 16rem;
+            border-radius: 0.1rem;
+            border: none;
+            margin-top: 1rem;
+            background-color:rgb(226, 226, 226);
+        }
+
+        #confirmPasswordRegister::placeholder{
+            padding-left: 0.2rem;
+            color:rgb(148, 148, 148);
+        }
+
+        #confirmPasswordError{
+            font-size: 0.7rem;
+            color:rgb(182, 0, 0);
+            margin-right: 8.2rem;
+            padding-top:0rem;
+            margin-bottom: -1rem;
+            display:block;
+        }
+
+        #registerBtn{
+            margin-top:2rem;
+            width: 16rem;
+            height: 2rem;
+            border:none;
+            background-color: rgb(196, 96, 112);
+            color:white;
+            font-weight: bold;
+            border-radius: 0.1rem;
+        }
+
+    }
+}
