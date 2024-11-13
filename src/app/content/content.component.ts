@@ -3,19 +3,17 @@ import { SavedContent } from './content.interface';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../confirm/confirm.component';
-import { take } from 'rxjs';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FileUploadService } from '../shared-services/file-upload.service';
+import { Observable, take } from 'rxjs';
+import { FileUploadService } from '../content-service/file-upload.service';
 
-
+type  ContentType= 'image' | 'video' | 'invalid' | 'noContent';
 
 @Component({
   selector: 'app-content',
   standalone: true,
   imports: [ 
     CommonModule, 
-    ConfirmComponent, 
-    ReactiveFormsModule, 
+    // ConfirmComponent, 
   ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
@@ -26,81 +24,69 @@ export class ContentComponent {
 
   savedContent : SavedContent[] = [];
   selectedContent?:SavedContent;
-  contentType: 'image' | 'video' | 'invalid' | 'noContent' = 'noContent';
+  contentType: ContentType = 'noContent';
   showContent: boolean = false;
   showModal: boolean = false;
 
-  constructor(private dialog: MatDialog,
+  constructor(
+    private dialog: MatDialog,
     private fileUploadService: FileUploadService
   ) {}
-
-  // uploadService = inject(FileUploadService)
 
   addFileHandler() {
     this.fileInput.nativeElement.click();
   }
 
   redirectFileHandler(fileEvent: Event){
-    // this.uploadService.RedirectFileHandler(fileEvent)
-    const input =fileEvent.target as HTMLInputElement;
-
-    console.log(input.files);
-    const file =input.files![0];
-    console.log(file.type);
+    const input = fileEvent.target as HTMLInputElement;
+    const file = input.files ? input.files[0] : null;
+    
+    if (!file) return;
+  
     const fileUrl = URL.createObjectURL(file);
-    console.log('file url',fileUrl);
+    this.contentType = this.getContentType(file.type);
+    this.showContent = true;
+  
+    this.selectedContent = this.createContentObject(file, fileUrl);
+  }
+  
+  private getContentType(fileType: string): ContentType {
+    if (fileType.startsWith('image/')) return 'image';
+    if (fileType.startsWith('video/')) return 'video';
+    return 'invalid';
+  }
 
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const fileType = file.type;
-
-      //Set the id that saves in backend here
-      const uniqueId = ``;
-      const fileUrl = URL.createObjectURL(file); 
-
-      switch(true) {
-        case fileType.startsWith('image/'):
-        this.contentType = 'image';
-        this.showContent= true;
-        this.selectedContent = { 
-          id: uniqueId, 
-          name: file.name, 
-          type: 'image', 
-          url: fileUrl  };
-        break;
-
-        case fileType.startsWith('video/'):
-          this.contentType = 'video';
-          this.showContent= true;
-          this.selectedContent = { 
-            id: uniqueId, 
-            name: file.name, 
-            type: 'video', 
-            url: fileUrl};
-          break;
-
-        default :
-        this.contentType = 'invalid';
-        this.showContent=true;
-        this.selectedContent = { 
-          id: uniqueId, 
-          name: file.name, 
-          type: 'invalid', 
-          url: '',  };
-        break;
-      }
+  private createContentObject(file: File, fileUrl: string): SavedContent {
+    return {
+      name: file.name,
+      type: this.contentType,
+      url: fileUrl
     }
   }
 
-
-
   handleSaveContent (): void {
       if(this.selectedContent){
-        this.savedContent.push(this.selectedContent);
+        this.fileUploadService.fileHandler(
+          this.selectedContent.name,
+          this.selectedContent.type,
+          this.selectedContent.url
+        ).subscribe(
+          (response) => {
+            console.log('content saved! ' , response);
 
-        this.selectedContent = undefined;
-        this.showContent= false;
+            this.savedContent.push(this.selectedContent!);
+            this.resetContent();  
+          },
+          (error) => {
+            console.log('fail!' , error);
+          }
+        )
       } 
+  }
+
+  private resetContent() {
+    this.selectedContent = undefined;
+    this.showContent = false;
   }
 
   updateSavedContent() {
@@ -135,15 +121,13 @@ export class ContentComponent {
     }
   }
 
-
-
   deleteContentFile(content : SavedContent): void{
     const confirmRef = this.dialog.open(ConfirmComponent);
 
     confirmRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result === true) {
-        this.savedContent = this.savedContent.filter(item => item.id !== content.id);
-        console.log('Deleted content with ID:', content.id);
+        this.savedContent = this.savedContent.filter(item => item !== content);
+        console.log('Deleted content with ID:', content);
       } else {
         console.log('Deletion canceled.');
       }

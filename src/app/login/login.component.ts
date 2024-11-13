@@ -38,8 +38,6 @@ export class LoginComponent {
       const email=emailControl.value;
       const password=passwordControl.value;
 
-      console.log(email, password);
-
       if(!email || !password){
         console.log('Form cannot be empty');
         return;

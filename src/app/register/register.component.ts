@@ -36,16 +36,13 @@ export class RegisterComponent {
       password: new FormControl('', Validators.required),
       confirmPassword: new FormControl('', Validators.required)
     })
-  
   }
 
   createUserSubmit() {
 
     this.submitted=true;
-    console.log(this.registerForm.value);
 
     if(this.registerForm.valid) {
-      console.log(this.registerForm.value);
 
       const { confirmPassword, ...userData} = this.registerForm.value;
 
