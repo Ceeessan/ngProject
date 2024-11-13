@@ -13,7 +13,10 @@ export class RegisterService {
   constructor(private http: HttpClient) { }
 
   registerUser(userData: registerForm): Observable<registerForm>{
+    console.log("User data to send:", userData);
+
     return this.http.post<registerForm>(this.userUrl, userData);
+    
   }
 }
 

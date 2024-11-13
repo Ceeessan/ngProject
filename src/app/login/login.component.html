@@ -1,27 +1,40 @@
 <section>
-    <div class="opacity-fade" [ngClass]="{'active': isActive}" (click)="closeModal()">
-        <div class="modal-login" (click)="$event.stopPropagation()">
-            <h4 id="loginText">Log in to your account</h4>
+        <div class="modal-login" >
+            <h4 id="loginText">Login to your account</h4>
 
-            <form (ngSubmit)="loginSubmit()">
+            <form (ngSubmit)="loginSubmit()" [formGroup]="loginForm">
                 <p id="importantMessage"> <span id="important">Important!</span>  
                     This is not a real CMS and has fake emails and passwords. Please, do not implement important information about yourself!
                 </p>
 
-                <input [formControl]="loginName" required valid id="inputNameLogin" placeholder="Username" type="text">
-                <em *ngIf="loginName.invalid && loginName.dirty || loginName.touched" id="loginUserNameError">
-                    *Username is required
+                <input 
+                formControlName="loginEmail" 
+                required 
+                valid
+                id="emailLogin" 
+                placeholder="Email" 
+                type="text"
+                name="email"
+                />
+                <em *ngIf="(loginForm.get('loginEmail')?.touched || loginForm.get('loginEmail')?.dirty) && loginForm.get('loginEmail')?.invalid" id="emailError">
+                    *Email is required
                 </em>
     
-                <input [formControl]="loginPassword" required valid id="inputPasswordLogin" type="password" placeholder="Password">
-                <em *ngIf="loginPassword.invalid && loginPassword.dirty || loginPassword.touched" id="loginUserNameError">
+                <input 
+                formControlName="loginPassword" 
+                required
+                valid
+                id="inputPasswordLogin" 
+                placeholder="Password"
+                type="password"
+                name="password"
+                />
+                <em *ngIf="loginForm.get('loginPassword')?.invalid && (loginForm.get('loginPassword')?.dirty || loginForm.get('loginPassword')?.touched)" id="passwordError">
                     *Password is required
                 </em>
 
                 <a [routerLink]="['/register']" id="registerUser">Register</a>
                 <button id="loginBtn" type="submit">Login</button>
             </form>
-            
         </div>
-    </div>
 </section>

@@ -1,7 +1,7 @@
 section {
     .modal-register {
         margin:auto;
-        margin-top: 4rem;
+        margin-top: 10rem;
         display:flex;
         flex-direction: column;
         text-align:center;
@@ -11,31 +11,48 @@ section {
         background-color:white;
         border-radius: 0.5rem;
 
-        #registerText{
+        .register-top-section{
             display:flex;
-            justify-content:center;
+            justify-content:space-between;
+            flex-direction: row;
+            align-items:center;
             color: black;
             width:100%;
-            font-size: 1rem;
             padding-top: 1.5rem;
             padding-bottom: 0.5rem;
+            padding-left: 2rem;
+            padding-right: 10rem;
             background-color: rgb(87, 79, 79);
-            color: rgb(214, 214, 203);
             border-top-left-radius: 0.4rem;
             border-top-right-radius: 0.4rem;
+
+            #arrowToLogin{
+                color: rgb(214, 214, 203);
+                padding-bottom: 0.4rem;
+                cursor:pointer;
+            }
+
+            #registerText{
+                font-size: 1.3rem;
+                color: rgb(214, 214, 203);
+
+            }
         }
 
         #importantMessage{
-            text-align: center;
+            display:flex;
+            justify-content: center;
+            flex-direction: column;
+            width: 70%;
+            align-items:center;
+            margin:auto;
             color:rgb(46, 46, 46);
             font-size: 0.7rem;
             font-weight: light;
-            line-height: 0.9rem;
+            line-height: 0.9rem;        
 
             #important{
-                display:flex;
-                justify-content: center;
-                flex-direction: column;
+                padding-top: 0.3rem;
                 font-weight: bold;
             }
         }
@@ -43,6 +60,7 @@ section {
         #firstnameRegister{
             height: 2rem;
             width: 16rem;
+            padding-left: 0.5rem;
             border-radius: 0.1rem;
             border: none;
             margin-top: 1.5rem;
@@ -66,6 +84,7 @@ section {
         #lastnameRegister{
             height: 2rem;
             width: 16rem;
+            padding-left: 0.5rem;
             border-radius: 0.1rem;
             border: none;
             margin-top: 1rem;
@@ -89,6 +108,7 @@ section {
         #emailRegister{
             height: 2rem;
             width: 16rem;
+            padding-left: 0.5rem;
             border-radius: 0.1rem;
             border: none;
             margin-top: 1rem;
@@ -103,7 +123,7 @@ section {
         #emailError{
             font-size: 0.7rem;
             color:rgb(182, 0, 0);
-            margin-right: 8.2rem;
+            margin-right: 10rem;
             padding-top:0rem;
             margin-bottom: -1rem;
             display:block;
@@ -112,6 +132,7 @@ section {
         #passwordRegister{
             height: 2rem;
             width: 16rem;
+            padding-left: 0.5rem;
             border-radius: 0.1rem;
             border: none;
             margin-top: 1rem;
@@ -126,7 +147,7 @@ section {
         #passwordError{
             font-size: 0.7rem;
             color:rgb(182, 0, 0);
-            margin-right: 8.2rem;
+            margin-right: 0.6rem;
             padding-top:0rem;
             margin-bottom: -1rem;
             display:block;
@@ -135,6 +156,7 @@ section {
         #confirmPasswordRegister{
             height: 2rem;
             width: 16rem;
+            padding-left: 0.5rem;
             border-radius: 0.1rem;
             border: none;
             margin-top: 1rem;
@@ -149,22 +171,45 @@ section {
         #confirmPasswordError{
             font-size: 0.7rem;
             color:rgb(182, 0, 0);
-            margin-right: 8.2rem;
+            margin-right: 5.2rem;
             padding-top:0rem;
             margin-bottom: -1rem;
             display:block;
         }
 
-        #registerBtn{
-            margin-top:2rem;
-            width: 16rem;
-            height: 2rem;
-            border:none;
-            background-color: rgb(196, 96, 112);
-            color:white;
+        #registerCompleteMessage{
+            display: flex;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: rgb(7, 105, 7);
             font-weight: bold;
-            border-radius: 0.1rem;
         }
 
+        .submit-button-and-message{
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items:center;
+
+            #registerBtn{
+                margin-top:2rem;
+                width: 16rem;
+                height: 2rem;
+                border:none;
+                background-color: rgb(196, 96, 112);
+                color:white;
+                font-weight: bold;
+                border-radius: 0.1rem;
+                cursor:pointer;
+            }
+    
+            #invalidFormMessage{
+                font-size: 0.7rem;
+                color:rgb(182, 0, 0);
+                padding-top:0rem;
+                margin-bottom: -1rem;
+            }
+
+        }
     }
 }

@@ -1,26 +1,27 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LoginComponent } from '../login/login.component';
-import { ModalService } from '../modal.service';
+import { LoginService } from '../../auth-service/auth.service';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [ 
-    RouterModule,
-    LoginComponent
+    RouterModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  isActive= true;
 
-constructor( private modalService: ModalService ) {}
 
-openModal() {
-  this.modalService.openModal(); 
-}
+  constructor( private authService : LoginService ) {}
 
+  logout() {
+    this.authService.logout();
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
 }

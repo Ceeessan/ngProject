@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModalService } from '../modal.service';
 import { CommonModule } from '@angular/common';
 import { RegisterService } from './service/register.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-
 
 @Component({
   selector: 'app-register',
@@ -13,7 +11,9 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    // HttpClientModule
+    RouterModule,
+    HttpClientModule
+
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
@@ -22,11 +22,10 @@ import { HttpClientModule } from '@angular/common/http';
 export class RegisterComponent {
   isActive=true;
   registerForm : FormGroup;
-
-  // confirmPassword!: string;
+  registerComplete: boolean = false;
+  submitted: Boolean = false;
 
   constructor(
-    private modalService: ModalService,
     private registerService: RegisterService,
     private router: Router
   ){
@@ -42,19 +41,27 @@ export class RegisterComponent {
 
   createUserSubmit() {
 
+    this.submitted=true;
+    console.log(this.registerForm.value);
+
     if(this.registerForm.valid) {
       console.log(this.registerForm.value);
 
       const { confirmPassword, ...userData} = this.registerForm.value;
+
 
       if (this.registerForm.value.password !== confirmPassword) {
         console.log('Lösenordet matchar inte!');
         return;
       }
 
-      this.registerService.registerUser(userData).subscribe((response) => {
+      this.registerService.registerUser(userData).subscribe(
+        (response) => {
         console.log('User registered successfully', response);
-        // this.router.navigate(['/login']);
+        this.registerComplete = true;
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
       }, 
     (error) => {
       console.log("Error registering user:", error);

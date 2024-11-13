@@ -1,6 +1,10 @@
 <section>
         <div class="modal-register" (click)="$event.stopPropagation()">
-            <h4 id="registerText">Register</h4>
+            <div class="register-top-section">
+                <a id="arrowToLogin" routerLink="/login"><i class='fas fa-arrow-left'></i></a>
+                <h4 id="registerText">Register</h4>
+            </div>
+            
 
             <form (ngSubmit)="createUserSubmit()" [formGroup]="registerForm">
                 <p id="importantMessage"> <span id="important">Important!</span>  
@@ -9,65 +13,58 @@
 
                 <input 
                 formControlName="firstname" 
-                required 
-                valid 
                 id="firstnameRegister" 
                 placeholder="Firstname" 
                 type="text"
                 />
-                <em *ngIf="registerForm.get('firstname')!.invalid && registerForm.get('firstname')!.dirty || registerForm.get('firstname')!.touched"id="firstnameError">
+                <em *ngIf="registerForm.get('firstname')!.invalid && (registerForm.get('firstname')!.touched )"id="firstnameError">
                     *Firstname is required
                 </em>
     
                 <input 
                 formControlName="lastname" 
-                required 
-                valid 
                 id="lastnameRegister" 
                 type="text" 
-                placeholder="lastname"
+                placeholder="Lastname"
                 />
-                <em *ngIf="registerForm.get('lastname')!.invalid && registerForm.get('lastname')!.dirty || registerForm.get('lastname')!.touched" id="lastnameError">
+                <em *ngIf="registerForm.get('lastname')!.invalid && (registerForm.get('lastname')!.touched )" id="lastnameError">
                     *Lastname is required
                 </em>
 
                 <input 
                 formControlName="email" 
-                required 
-                valid 
                 id="emailRegister" 
                 type="text" 
                 placeholder="Emailaddress"
                 />
-                <em *ngIf="registerForm.get('email')!.invalid && registerForm.get('email')!.dirty || registerForm.get('email')!.touched" id="emailError">
+                <em *ngIf="registerForm.get('email')!.invalid && (registerForm.get('email')!.touched )" id="emailError">
                     *Email is required
                 </em>
 
                 <input 
                 formControlName="password" 
-                required 
-                valid 
                 id="passwordRegister" 
                 type="password" 
                 placeholder="Password"
                 />
-                <em *ngIf="registerForm.get('password')!.invalid && registerForm.get('password')!.dirty || registerForm.get('password')!.touched" id="passwordError">
-                    *Password is required
+                <em *ngIf="registerForm.get('password')!.invalid && (registerForm.get('password')!.touched)" id="passwordError">
+                    *Password is required, at least 10 characters 
                 </em>
 
                 <input 
-                formControlName="confirmpassword" 
-                required 
-                valid 
+                formControlName="confirmPassword" 
                 id="confirmPasswordRegister" 
                 type="password" 
                 placeholder="Confirm Password"
                 />
-                <em *ngIf="registerForm.get('password')!.invalid && registerForm.get('password')!.dirty || registerForm.get('password')!.touched" id="passwordError">
-                    *Password is required
+                <em *ngIf="registerForm.get('confirmPassword')!.invalid && (registerForm.get('confirmPassword')!.touched )" id="confirmPasswordError">
+                    *Confirm Password is required
                 </em>
-                <button id="registerBtn" type="submit">Register</button>
+                <p id="registerCompleteMessage" *ngIf="registerComplete">You have been sucessfully registered!</p>
+                <div class="submit-button-and-message">
+                    <button id="registerBtn" type="submit">Register</button>
+                    <em *ngIf="submitted && !registerForm.valid && registerForm.dirty" id="invalidFormMessage"> Please fill out all required fields. </em>
+                </div>
             </form>
-            
         </div>
 </section>

@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { take } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FileUploadService } from '../shared-services/services/file-upload.service';
+import { FileUploadService } from '../shared-services/file-upload.service';
 
 
 

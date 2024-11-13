@@ -1,124 +1,113 @@
 section{
-    .opacity-fade{
-            height: 100vh; 
-            width: 100%;
-            color: white; 
-            display: flex;
-            justify-content: center; 
-            align-items: center; 
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.5); 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px); 
-            z-index: 9999; 
-            visibility: hidden; 
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .modal-login{
+            display:flex;
+            flex-direction: column;
+            text-align:center;
+            align-items:center;
+            margin:auto;
+            margin-top: 14rem;
+            width: 20rem;
+            height: 25rem;
+            background-color:white;
+            border-radius: 0.5rem;
 
-            &.active {
-                visibility: visible;
-                opacity: 1;
-            }
-
-            .modal-login{
+            #loginText{
                 display:flex;
-                flex-direction: column;
-                text-align:center;
-                align-items:center;
-                width: 20rem;
-                height: 25rem;
-                background-color:white;
-                border-radius: 0.5rem;
+                justify-content:center;
+                color: black;
+                width:100%;
+                font-size: 1rem;
+                padding-top: 1.5rem;
+                padding-bottom: 0.5rem;
+                background-color: rgb(87, 79, 79);
+                color: rgb(214, 214, 203);
+                border-top-left-radius: 0.4rem;
+                border-top-right-radius: 0.4rem;
+            }
 
-                #loginText{
+            #importantMessage{
+                text-align: center;
+                color:rgb(46, 46, 46);
+                font-size: 0.7rem;
+                font-weight: light;
+                line-height: 0.9rem;
+
+                #important{
                     display:flex;
-                    justify-content:center;
-                    color: black;
-                    width:100%;
-                    font-size: 1rem;
-                    padding-top: 1.5rem;
-                    padding-bottom: 0.5rem;
-                    background-color: rgb(87, 79, 79);
-                    color: rgb(214, 214, 203);
-                    border-top-left-radius: 0.4rem;
-                    border-top-right-radius: 0.4rem;
-                }
-
-                #importantMessage{
-                    text-align: center;
-                    color:rgb(46, 46, 46);
-                    font-size: 0.7rem;
-                    font-weight: light;
-                    line-height: 0.9rem;
-
-                    #important{
-                        display:flex;
-                        justify-content: center;
-                        flex-direction: column;
-                        font-weight: bold;
-                    }
-                }
-
-                #inputNameLogin{
-                    height: 2rem;
-                    width: 16rem;
-                    border-radius: 0.1rem;
-                    border: none;
-                    margin-top: 2rem;
-                    background-color:rgb(226, 226, 226);
-                }
-
-                #inputNameLogin::placeholder{
-                    padding-left: 0.2rem;
-                    color:rgb(148, 148, 148);
-                }
-
-                #loginUserNameError{
-                    font-size: 0.8rem;
-                    color:rgb(182, 0, 0);
-                    margin-right: 7.5rem;
-                    padding-top:0.5rem;
-                    display:block;
-                }
-
-                #inputPasswordLogin{
-                    height: 2rem;
-                    width: 16rem;
-                    border-radius: 0.1rem;
-                    border: none;
-                    background-color:rgb(226, 226, 226);
-                    margin-top: 1rem;
-                }
-
-                #inputPasswordLogin::placeholder{
-                    padding-left: 0.2rem;
-                    color:rgb(148, 148, 148);
-                }
-
-                #registerUser{
-                    display:flex;
-                    justify-content:center;
-                    align-items:center;
-                    margin-top:2rem;
-                    font-size:0.7rem;
-                    color:black;
-                    cursor:pointer;
-                }
-
-                #loginBtn{
-                    margin-top:0.5rem;
-                    width: 16rem;
-                    height: 2rem;
-                    border:none;
-                    background-color: rgb(196, 96, 112);
-                    color:white;
+                    justify-content: center;
+                    flex-direction: column;
                     font-weight: bold;
-                    border-radius: 0.1rem;
                 }
             }
+
+            #emailLogin{
+                height: 2rem;
+                width: 16rem;
+                padding-left: 0.5rem;
+                border-radius: 0.1rem;
+                border: none;
+                margin-top: 1.5rem;
+                background-color:rgb(226, 226, 226);
+            }
+
+            #emailLogin::placeholder{
+                padding-left: 0.2rem;
+                color:rgb(148, 148, 148);
+            }
+
+            #emailError{
+                font-size: 0.7rem;
+                color:rgb(182, 0, 0);
+                margin-right: 9.8rem;
+                padding-top:0rem;
+                margin-bottom: -1rem;
+                display:block;
+            }
+
+            #inputPasswordLogin{
+                height: 2rem;
+                width: 16rem;
+                padding-left: 0.5rem;
+                border-radius: 0.1rem;
+                border: none;
+                margin-top: 1.5rem;
+                background-color:rgb(226, 226, 226);
+            }
+
+            #inputPasswordLogin::placeholder{
+                padding-left: 0.2rem;
+                color:rgb(148, 148, 148);
+            }
+
+            #passwordError{
+                font-size: 0.7rem;
+                color:rgb(182, 0, 0);
+                margin-right: 8.4rem;
+                padding-top:0rem;
+                margin-bottom: -1rem;
+                display:block;
+            }
+
+            #registerUser{
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                margin-top:2rem;
+                font-size:0.7rem;
+                color:black;
+                cursor:pointer;
+            }
+
+            #loginBtn{
+                margin-top:0.3rem;
+                width: 16rem;
+                height: 2rem;
+                border:none;
+                background-color: rgb(196, 96, 112);
+                color:white;
+                font-weight: bold;
+                border-radius: 0.1rem;
+                cursor:pointer;
+            }
+        }
     }
-}

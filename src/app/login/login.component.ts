@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ModalService } from '../modal.service';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { LoginService } from '../../auth-service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,25 +15,39 @@ import { RouterModule } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit {
-  isActive = true;
-  loginName = new FormControl('', Validators.required);
-  loginPassword = new FormControl('', Validators.required);
+export class LoginComponent {
 
-
-  constructor( private modalService: ModalService) {}
-
-  ngOnInit() {
-    this.modalService.isActive$.subscribe(active => {
-      this.isActive = active;
+  loginForm: FormGroup;
+  
+  constructor(
+    private loginService: LoginService 
+  ) {
+    this.loginForm = new FormGroup({
+      loginEmail: new FormControl('', [Validators.required, Validators.email]),
+      loginPassword: new FormControl('', Validators.required)
     })
-
   }
 
-  closeModal() {
-    this.modalService.closeModal();
-  }
+  loginSubmit(){
 
-  loginSubmit(){}
+    const emailControl = this.loginForm.get('loginEmail');
+    const passwordControl = this.loginForm.get('loginPassword');
 
+    if (emailControl && passwordControl) {
+
+      const email=emailControl.value;
+      const password=passwordControl.value;
+
+      console.log(email, password);
+
+      if(!email || !password){
+        console.log('Form cannot be empty');
+        return;
+      }
+      this.loginService.login(email.toString(),password.toString());
+    } else {
+      console.log('Form i sinvalid');
+    }
+  } 
 }
+
