@@ -5,7 +5,7 @@ section{
             text-align:center;
             align-items:center;
             margin:auto;
-            margin-top: 14rem;
+            margin-top: 5rem;
             width: 20rem;
             height: 25rem;
             background-color:white;
@@ -25,28 +25,13 @@ section{
                 border-top-right-radius: 0.4rem;
             }
 
-            #importantMessage{
-                text-align: center;
-                color:rgb(46, 46, 46);
-                font-size: 0.7rem;
-                font-weight: light;
-                line-height: 0.9rem;
-
-                #important{
-                    display:flex;
-                    justify-content: center;
-                    flex-direction: column;
-                    font-weight: bold;
-                }
-            }
-
             #emailLogin{
                 height: 2rem;
                 width: 16rem;
                 padding-left: 0.5rem;
                 border-radius: 0.1rem;
                 border: none;
-                margin-top: 1.5rem;
+                margin-top: 3rem;
                 background-color:rgb(226, 226, 226);
             }
 

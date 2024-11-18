@@ -1,12 +1,8 @@
 <section>
-        <div class="modal-login" >
+        <div class="modal-login" *ngIf="showLoginModal">
             <h4 id="loginText">Login to your account</h4>
 
             <form (ngSubmit)="loginSubmit()" [formGroup]="loginForm">
-                <p id="importantMessage"> <span id="important">Important!</span>  
-                    This is not a real CMS and has fake emails and passwords. Please, do not implement important information about yourself!
-                </p>
-
                 <input 
                 formControlName="loginEmail" 
                 required 

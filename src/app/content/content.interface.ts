@@ -1,5 +1,10 @@
-export interface SavedContent {
-    name: string;
+export interface Content {
+    _id: string;
+    filename: string;
     type:string;
-    url: string;
+    fileurl: string;
+    timestamp?: Date;
+    userId: string;
+    hasPlaylists?: boolean;
+    playlists?: string[];
   }

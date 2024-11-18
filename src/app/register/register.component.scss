@@ -7,7 +7,7 @@ section {
         text-align:center;
         align-items:center;
         width: 25rem;
-        height: 32rem;
+        height: 30rem;
         background-color:white;
         border-radius: 0.5rem;
 
@@ -39,31 +39,13 @@ section {
             }
         }
 
-        #importantMessage{
-            display:flex;
-            justify-content: center;
-            flex-direction: column;
-            width: 70%;
-            align-items:center;
-            margin:auto;
-            color:rgb(46, 46, 46);
-            font-size: 0.7rem;
-            font-weight: light;
-            line-height: 0.9rem;        
-
-            #important{
-                padding-top: 0.3rem;
-                font-weight: bold;
-            }
-        }
-
         #firstnameRegister{
             height: 2rem;
             width: 16rem;
             padding-left: 0.5rem;
             border-radius: 0.1rem;
             border: none;
-            margin-top: 1.5rem;
+            margin-top: 3rem;
             background-color:rgb(226, 226, 226);
         }
 

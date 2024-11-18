@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { LoginService } from '../../auth-service/auth.service';
+import { LoginService } from '../../auth-service/login.service';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +16,9 @@ import { LoginService } from '../../auth-service/auth.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-
   loginForm: FormGroup;
-  
+  showLoginModal: boolean = false;
+
   constructor(
     private loginService: LoginService 
   ) {
@@ -26,6 +26,10 @@ export class LoginComponent {
       loginEmail: new FormControl('', [Validators.required, Validators.email]),
       loginPassword: new FormControl('', Validators.required)
     })
+
+    if(this.loginService.isLoggedIn()){
+      this.showLoginModal = true;
+    }
   }
 
   loginSubmit(){
@@ -48,4 +52,3 @@ export class LoginComponent {
     }
   } 
 }
-

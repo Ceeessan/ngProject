@@ -1,10 +1,13 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { SavedContent } from './content.interface';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Content } from './content.interface';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../confirm/confirm.component';
-import { Observable, take } from 'rxjs';
+import { map, take, tap } from 'rxjs';
 import { FileUploadService } from '../content-service/file-upload.service';
+import { LoginService } from '../../auth-service/login.service';
+// import { v4 as uuidv4 } from 'uuid';
+import { Observable } from 'rxjs';
 
 type  ContentType= 'image' | 'video' | 'invalid' | 'noContent';
 
@@ -13,24 +16,24 @@ type  ContentType= 'image' | 'video' | 'invalid' | 'noContent';
   standalone: true,
   imports: [ 
     CommonModule, 
-    // ConfirmComponent, 
   ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
 
-export class ContentComponent {
+export class ContentComponent implements OnInit {
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef;
 
-  savedContent : SavedContent[] = [];
-  selectedContent?:SavedContent;
+  contents : Content[] = [];
+  selectedContent?:Content;
   contentType: ContentType = 'noContent';
   showContent: boolean = false;
   showModal: boolean = false;
 
   constructor(
     private dialog: MatDialog,
-    private fileUploadService: FileUploadService
+    private fileUploadService: FileUploadService,
+    private loginService: LoginService
   ) {}
 
   addFileHandler() {
@@ -42,6 +45,12 @@ export class ContentComponent {
     const file = input.files ? input.files[0] : null;
     
     if (!file) return;
+
+    const maxSize = 10 * 1024 * 1024;
+    if(file.size > maxSize){
+      console.log('File is too large');
+      return;
+    }
   
     const fileUrl = URL.createObjectURL(file);
     this.contentType = this.getContentType(file.type);
@@ -56,32 +65,71 @@ export class ContentComponent {
     return 'invalid';
   }
 
-  private createContentObject(file: File, fileUrl: string): SavedContent {
+  private createContentObject(file: File, fileUrl: string): Content {
+      const now = new Date();
+      const customTimestamp = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        now.getHours(),
+        now.getMinutes(),
+        0,  
+        0  
+      );
+      // const uniqueFileName = uuidv4() + path.extname(file.name);
     return {
-      name: file.name,
+      _id: '',
+      filename: file.name,
       type: this.contentType,
-      url: fileUrl
+      fileurl: fileUrl,
+      timestamp: customTimestamp,
+      userId: this.loginService.getUser() || '',
+      hasPlaylists: false,
+      playlists: []
     }
   }
 
-  handleSaveContent (): void {
-      if(this.selectedContent){
-        this.fileUploadService.fileHandler(
-          this.selectedContent.name,
-          this.selectedContent.type,
-          this.selectedContent.url
-        ).subscribe(
-          (response) => {
-            console.log('content saved! ' , response);
+  ngOnInit() {
+    this.showSavedContent();
+  }
 
-            this.savedContent.push(this.selectedContent!);
-            this.resetContent();  
-          },
-          (error) => {
-            console.log('fail!' , error);
-          }
-        )
-      } 
+  showSavedContent() { 
+    const userId = this.loginService.currentUserValue.userId;
+    console.log(userId);
+    this.fileUploadService.getAllFiles(userId).subscribe(
+      (response) => {
+        console.log("Loaded content:", response);
+        this.contents = response.filter(content => content.userId === userId);
+      },
+      (error) => {
+        console.log("Failed to load content: " , error);
+        this.contents = [];
+      }
+    )
+  }
+
+  handleSaveContent (): void {
+    const userId = this.loginService.currentUserValue.userId;
+    
+      this.fileUploadService.fileHandler(
+      this.selectedContent!.filename,
+      this.selectedContent!.type,
+      this.selectedContent!.fileurl,
+      userId,      
+      this.selectedContent!.timestamp,
+    ).pipe(
+      map((response) => {
+        const savedContent = response.saveContent;
+        this.contents.push(savedContent);
+        this.resetContent();
+        return this.contents;
+      }),
+      tap((contents) => console.log('contents',contents))     
+    ).subscribe( (response) => {
+      console.log('content sparat ',response);
+      this.showSavedContent();
+      }
+    )
   }
 
   private resetContent() {
@@ -89,51 +137,23 @@ export class ContentComponent {
     this.showContent = false;
   }
 
-  updateSavedContent() {
+  handleDeleteContent(content: Content): void { 
 
-  }
+      const confirmRemove = this.dialog.open(ConfirmComponent,
+        { data: { contentId : content._id }
+      });
 
-  deleteSavedContent() {
-
-  }
-
-  handleDeleteContent(): void {
-    if(this.showContent === true){
-    const confirmRemove = this.dialog.open(ConfirmComponent);
-
-      confirmRemove.afterClosed().pipe(take(1)).subscribe( result => {
-        if ( result === true){
-          this.showContent = false;
-          this.selectedContent = undefined;
-          this.fileInput.nativeElement.value = '';
-        } else {
-          console.log('Deletion canceled');
-        }
+    confirmRemove.afterClosed().pipe(take(1)).subscribe( result => {
+      if (result === true ) {
+        this.fileUploadService.deleteFile(content._id).subscribe(
+          () => {
+            console.log('Content deleted: ' , content._id);
+            this.contents = this.contents.filter( c => c._id !== content._id)
+        },
+      (error) => {
+        console.log("Error deleting content", error);
       })
-    } else {
-      console.log('No content to delete');
-    }
-  }
-
-  showContentFile(): void {
-    if (this.selectedContent){
-      this.showContent = true;
-    }
-  }
-
-  deleteContentFile(content : SavedContent): void{
-    const confirmRef = this.dialog.open(ConfirmComponent);
-
-    confirmRef.afterClosed().pipe(take(1)).subscribe(result => {
-      if (result === true) {
-        this.savedContent = this.savedContent.filter(item => item !== content);
-        console.log('Deleted content with ID:', content);
-      } else {
-        console.log('Deletion canceled.');
-      }
+      }  
     })
   }
 }
-
-
-

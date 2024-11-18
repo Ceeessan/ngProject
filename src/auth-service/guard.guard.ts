@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { LoginService } from './auth.service';
+import { LoginService } from './login.service';
 
 export const guardGuard: CanActivateFn = (route, state) => {
 

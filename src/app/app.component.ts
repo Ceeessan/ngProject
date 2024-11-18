@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
-import { LoginService } from '../auth-service/auth.service';
+import { LoginService } from '../auth-service/login.service';
 import { CommonModule } from '@angular/common';
-
-
 
 @Component({
   selector: 'app-root',
@@ -21,6 +19,7 @@ import { CommonModule } from '@angular/common';
 export class AppComponent implements OnInit {
   showHeader: boolean = true;
   title = 'ngProject';
+  showLoginModal: boolean = false;
 
   constructor(
     private authService: LoginService,
@@ -34,13 +33,14 @@ export class AppComponent implements OnInit {
   }
 
   checkRoute():void {
-
     const currentRoute = this.router.url;
 
     if(currentRoute === '/login' || currentRoute === '/register' || !this.authService.isLoggedIn()){
       this.showHeader = false;
+      this.showLoginModal = true;
     } else {
       this.showHeader = true;
+      this.showLoginModal = false;
     }
   }
 }
