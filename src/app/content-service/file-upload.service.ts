@@ -62,7 +62,7 @@ export class FileUploadService {
 
     const params = new HttpParams().set('userId', userId);
 
-    return this.http.get<Content[]>(`${this.contentUrl}`, {headers});
+    return this.http.get<Content[]>(`${this.contentUrl}`, {headers,params});
   }
 
   //Not using right now.

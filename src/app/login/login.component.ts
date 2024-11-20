@@ -19,6 +19,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   showLoginModal: boolean = false;
 
+
   constructor(
     private loginService: LoginService 
   ) {

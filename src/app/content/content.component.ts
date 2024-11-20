@@ -6,7 +6,6 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 import { map, take, tap } from 'rxjs';
 import { FileUploadService } from '../content-service/file-upload.service';
 import { LoginService } from '../../auth-service/login.service';
-// import { v4 as uuidv4 } from 'uuid';
 import { Observable } from 'rxjs';
 
 type  ContentType= 'image' | 'video' | 'invalid' | 'noContent';
@@ -45,12 +44,6 @@ export class ContentComponent implements OnInit {
     const file = input.files ? input.files[0] : null;
     
     if (!file) return;
-
-    const maxSize = 10 * 1024 * 1024;
-    if(file.size > maxSize){
-      console.log('File is too large');
-      return;
-    }
   
     const fileUrl = URL.createObjectURL(file);
     this.contentType = this.getContentType(file.type);
@@ -76,7 +69,6 @@ export class ContentComponent implements OnInit {
         0,  
         0  
       );
-      // const uniqueFileName = uuidv4() + path.extname(file.name);
     return {
       _id: '',
       filename: file.name,
@@ -95,7 +87,11 @@ export class ContentComponent implements OnInit {
 
   showSavedContent() { 
     const userId = this.loginService.currentUserValue.userId;
-    console.log(userId);
+
+    if (!userId) {
+      console.log("No userId found!");
+      return;
+    }
     this.fileUploadService.getAllFiles(userId).subscribe(
       (response) => {
         console.log("Loaded content:", response);
@@ -124,7 +120,7 @@ export class ContentComponent implements OnInit {
         this.resetContent();
         return this.contents;
       }),
-      tap((contents) => console.log('contents',contents))     
+      tap((contents) => console.log('contentssssss',contents))     
     ).subscribe( (response) => {
       console.log('content sparat ',response);
       this.showSavedContent();
