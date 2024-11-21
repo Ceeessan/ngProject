@@ -48,8 +48,11 @@ export class ContentComponent implements OnInit {
     const fileUrl = URL.createObjectURL(file);
     this.contentType = this.getContentType(file.type);
     this.showContent = true;
-  
-    this.selectedContent = this.createContentObject(file, fileUrl);
+    
+    this.selectedContent = {
+      ...this.createContentObject(file, fileUrl),
+      actualFile: file
+    } 
   }
   
   private getContentType(fileType: string): ContentType {
@@ -82,6 +85,7 @@ export class ContentComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.showSavedContent();
   }
 
@@ -94,8 +98,9 @@ export class ContentComponent implements OnInit {
     }
     this.fileUploadService.getAllFiles(userId).subscribe(
       (response) => {
-        console.log("Loaded content:", response);
-        this.contents = response.filter(content => content.userId === userId);
+        if(response && response.length > 0){
+          this.contents = response.filter(content => content.userId === userId);
+        }
       },
       (error) => {
         console.log("Failed to load content: " , error);
@@ -106,24 +111,44 @@ export class ContentComponent implements OnInit {
 
   handleSaveContent (): void {
     const userId = this.loginService.currentUserValue.userId;
-    
-      this.fileUploadService.fileHandler(
-      this.selectedContent!.filename,
-      this.selectedContent!.type,
-      this.selectedContent!.fileurl,
-      userId,      
-      this.selectedContent!.timestamp,
-    ).pipe(
+
+    if (!this.selectedContent || !this.selectedContent.actualFile) {
+      console.error('No content selected!');
+      return;
+    }
+
+   
+    const file = this.selectedContent.actualFile;
+    console.log(file);
+
+    let formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', this.selectedContent.type);
+    if (this.selectedContent.timestamp) {
+      formData.append('timestamp', this.selectedContent.timestamp.toISOString()); 
+    }
+    formData.append('userId', userId); 
+    if (this.selectedContent!.hasPlaylists) {
+      console.log('BLAH2')
+      formData.append('hasPlaylists', this.selectedContent.hasPlaylists!.toString()); 
+    }
+    formData.append('playlists', JSON.stringify(this.selectedContent!.playlists));
+   
+    this.fileUploadService.fileHandler(formData).pipe(
       map((response) => {
         const savedContent = response.saveContent;
         this.contents.push(savedContent);
+        console.log(this.contents);
         this.resetContent();
         return this.contents;
       }),
-      tap((contents) => console.log('contentssssss',contents))     
+      tap((contents) => console.log('contents',contents))     
     ).subscribe( (response) => {
       console.log('content sparat ',response);
       this.showSavedContent();
+      },
+      (error) => {
+        console.error('error during upload', error)
       }
     )
   }

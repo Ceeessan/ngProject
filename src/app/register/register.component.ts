@@ -39,13 +39,10 @@ export class RegisterComponent {
   }
 
   createUserSubmit() {
-
     this.submitted=true;
 
     if(this.registerForm.valid) {
-
       const { confirmPassword, ...userData} = this.registerForm.value;
-
 
       if (this.registerForm.value.password !== confirmPassword) {
         console.log('Lösenordet matchar inte!');

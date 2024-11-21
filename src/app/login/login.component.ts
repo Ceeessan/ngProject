@@ -18,7 +18,7 @@ import { LoginService } from '../../auth-service/login.service';
 export class LoginComponent {
   loginForm: FormGroup;
   showLoginModal: boolean = false;
-
+  submitted: boolean = false;
 
   constructor(
     private loginService: LoginService 
@@ -34,6 +34,7 @@ export class LoginComponent {
   }
 
   loginSubmit(){
+    this.submitted= true;
 
     const emailControl = this.loginForm.get('loginEmail');
     const passwordControl = this.loginForm.get('loginPassword');

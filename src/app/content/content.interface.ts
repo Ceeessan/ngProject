@@ -7,4 +7,5 @@ export interface Content {
     userId: string;
     hasPlaylists?: boolean;
     playlists?: string[];
+    actualFile?: File;
   }

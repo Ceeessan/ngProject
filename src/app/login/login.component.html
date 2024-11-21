@@ -7,13 +7,13 @@
                 formControlName="loginEmail" 
                 required 
                 valid
-
+                submitted
                 id="emailLogin" 
                 placeholder="Email" 
                 type="text"
                 name="email"
                 />
-                <em *ngIf="(loginForm.get('loginEmail')?.touched || loginForm.get('loginEmail')?.dirty) && loginForm.get('loginEmail')?.invalid" id="emailError">
+                <em *ngIf="(loginForm.get('loginEmail')?.touched || loginForm.get('loginEmail')?.dirty) && loginForm.get('loginEmail')?.invalid && loginForm.get('loginEmail')?.value === ''" id="emailError">
                     *Email is required
                 </em>
     
@@ -21,19 +21,21 @@
                 formControlName="loginPassword" 
                 required
                 valid
-   
+                submitted
                 id="inputPasswordLogin" 
                 placeholder="Password"
                 type="password"
                 name="password"
                 />
                 <em *ngIf="loginForm.get('loginPassword')?.invalid && (loginForm.get('loginPassword')?.dirty || loginForm.get('loginPassword')?.touched)" id="passwordError">
-                    *Password is required
+                    *Password is required, at least 10 characters
                 </em>
 
-                <a [routerLink]="['/register']" id="registerUser">Register</a>
-                <button id="loginBtn" type="submit">Login</button>
-            
+                <div id="loginValidateSubmit">
+                    <a [routerLink]="['/register']" id="registerUser">Register</a>
+                    <button id="loginBtn" type="submit">Login</button>
+                    <em *ngIf="submitted && !loginForm.valid" id="invalidFormMessage"> Please fill out all required fields.</em>
+                </div>
             </form>
         </div>
 </section>

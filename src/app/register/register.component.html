@@ -59,7 +59,7 @@
                 <p id="registerCompleteMessage" *ngIf="registerComplete">You have been sucessfully registered!</p>
                 <div class="submit-button-and-message">
                     <button id="registerBtn" type="submit">Register</button>
-                    <em *ngIf="submitted && !registerForm.valid && registerForm.dirty" id="invalidFormMessage"> Please fill out all required fields. </em>
+                    <em *ngIf="submitted && !registerForm.valid" id="invalidFormMessage"> Please fill out all required fields. </em>
                 </div>
             </form>
         </div>

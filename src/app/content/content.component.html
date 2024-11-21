@@ -7,11 +7,11 @@
       </a>
       <input type="file" #fileInput id="fileInput" (change)="redirectFileHandler($event)" accept="image/*, video/*"  hidden>
     </div>
+
       <div class="saved-content">
         <p id="titleForContent"> Saved content</p>
           <ul id="contentListUL">
-            <li id="contentListLI" *ngFor="let content of contents" >
-                  
+            <li id="contentListLI" *ngFor="let content of contents" >     
               <div class="list-image-name" [ngSwitch]="contentType">
                 <div *ngSwitchCase = "'image'" >
                   <img 
