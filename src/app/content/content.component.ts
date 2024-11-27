@@ -6,7 +6,8 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 import { map, take, tap } from 'rxjs';
 import { FileUploadService } from '../content-service/file-upload.service';
 import { LoginService } from '../../auth-service/login.service';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { ContentListService } from '../content-service/content-list.service';
 
 type  ContentType= 'image' | 'video' | 'invalid' | 'noContent';
 
@@ -28,14 +29,18 @@ export class ContentComponent implements OnInit {
   contentType: ContentType = 'noContent';
   showContent: boolean = false;
   showModal: boolean = false;
+  isAlreadySaved: boolean = false;
 
   constructor(
     private dialog: MatDialog,
     private fileUploadService: FileUploadService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router,
+    private contentListService: ContentListService
   ) {}
 
   addFileHandler() {
+    
     this.fileInput.nativeElement.click();
   }
 
@@ -48,6 +53,7 @@ export class ContentComponent implements OnInit {
     const fileUrl = URL.createObjectURL(file);
     this.contentType = this.getContentType(file.type);
     this.showContent = true;
+    this.isAlreadySaved = false;
     
     this.selectedContent = {
       ...this.createContentObject(file, fileUrl),
@@ -63,15 +69,7 @@ export class ContentComponent implements OnInit {
 
   private createContentObject(file: File, fileUrl: string): Content {
       const now = new Date();
-      const customTimestamp = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        now.getHours(),
-        now.getMinutes(),
-        0,  
-        0  
-      );
+      const customTimestamp = new Date(now.getTime());
     return {
       _id: '',
       filename: file.name,
@@ -85,28 +83,32 @@ export class ContentComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.showSavedContent();
-  }
-
-  showSavedContent() { 
     const userId = this.loginService.currentUserValue.userId;
-
+  
     if (!userId) {
       console.log("No userId found!");
       return;
     }
-    this.fileUploadService.getAllFiles(userId).subscribe(
-      (response) => {
-        if(response && response.length > 0){
-          this.contents = response.filter(content => content.userId === userId);
-        }
-      },
-      (error) => {
-        console.log("Failed to load content: " , error);
-        this.contents = [];
+  
+    this.contentListService.showSavedContent(userId);
+  
+    this.contentListService.contents$.pipe(take(1)).subscribe((contents) => {
+      this.contents = contents;
+      console.log('content loaded', contents);
+    });
+  
+    this.contentListService.selectedContent$.subscribe((selectedContent) => {
+      if (selectedContent) {
+        this.selectedContent = selectedContent;
+        this.contentType = selectedContent.type as ContentType;
+        this.showContent = true;
+        this.isAlreadySaved = true;
+      } else {
+        this.selectedContent = undefined;
+        this.showContent = false;
+        this.isAlreadySaved = false;
       }
-    )
+    });
   }
 
   handleSaveContent (): void {
@@ -116,10 +118,8 @@ export class ContentComponent implements OnInit {
       console.error('No content selected!');
       return;
     }
-
    
     const file = this.selectedContent.actualFile;
-    console.log(file);
 
     let formData = new FormData();
     formData.append('file', file);
@@ -134,21 +134,26 @@ export class ContentComponent implements OnInit {
     }
     formData.append('playlists', JSON.stringify(this.selectedContent!.playlists));
    
-    this.fileUploadService.fileHandler(formData).pipe(
+    this.fileUploadService.fileHandler(formData)
+    .pipe(
       map((response) => {
         const savedContent = response.saveContent;
         this.contents.push(savedContent);
-        console.log(this.contents);
+
+        this.contents.sort((a,b) => {
+          const dateA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+          const dateB = b.timestamp ? new Date(b.timestamp)?.getTime() : 0;
+          return dateB - dateA;
+        })
         this.resetContent();
         return this.contents;
       }),
-      tap((contents) => console.log('contents',contents))     
+      tap((contents) => console.log('Contents',contents))     
     ).subscribe( (response) => {
-      console.log('content sparat ',response);
-      this.showSavedContent();
+      console.log('Content saved ',response);
       },
       (error) => {
-        console.error('error during upload', error)
+        console.error('Error during upload', error)
       }
     )
   }
@@ -176,5 +181,34 @@ export class ContentComponent implements OnInit {
       })
       }  
     })
+  }
+
+  deleteNoSavedContent() {
+
+    if( this.isAlreadySaved) {
+      return;
+    }
+
+    const confirmRemove = this.dialog.open(ConfirmComponent,
+      { data: {
+        title: "Remove unsaved content"
+       }
+    });
+
+    confirmRemove.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.selectedContent = undefined;
+        this.showContent = false;
+        this.isAlreadySaved = false;
+      }
+    })
+  }
+
+  showContentById(contentId: string) {
+    this.contentListService.showContentById(contentId);
+  }
+
+  goToPlayerlist() {
+    this.router.navigate(['/playlist']);
   }
 }

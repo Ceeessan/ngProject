@@ -12,18 +12,26 @@
         <p id="titleForContent"> Saved content</p>
           <ul id="contentListUL">
             <li id="contentListLI" *ngFor="let content of contents" >     
-              <div class="list-image-name" [ngSwitch]="contentType">
-                <div *ngSwitchCase = "'image'" >
+              <div class="list-image-name">
+                <div>
                   <img 
+                  *ngIf="content.type === 'image'"
                     id="urlImg" 
                     [src]="content.fileurl"
-                    title="{{content.fileurl}}"/>
+                    title="{{content.fileurl}}" 
+                    (click)="showContentById(content._id)"
+                    />
                 </div>
-                <div *ngSwitchCase = "'video'" >
+                <div>
                   <video 
+                    *ngIf="content.type === 'video'"
                     id="urlVideo" 
                     [src]="content.fileurl"  
-                    title="{{content.fileurl}}">
+                    title="{{content.fileurl}}"
+                    (click)="showContentById(content._id)"
+                    autoplay
+                    muted
+                    >
                   </video>
                 </div>
                   <p id="contentTypeName">
@@ -31,7 +39,7 @@
                   </p>         
                 </div>
                 <span id="nameContent" title="{{content.filename}}"> {{ 'Name: ' + content.filename}} </span>
-                <i id="folderIcon" class="fas fa-folder"></i>
+                <i id="folderIcon" class="fas fa-folder" (click)="goToPlayerlist()"></i>
                 <a title="Delete" id="trashIcon" (click)="handleDeleteContent(content)"><i class="fa fa-trash"></i></a>
             </li>
           </ul>
@@ -40,9 +48,9 @@
 
   <section class="show-content-container">
     <div class="handle-content-panel">
-      <button title="Save content" [disabled]="!selectedContent" (click)="handleSaveContent()" id="saveContent">Save</button>
+      <button title="Save content" [disabled]="!selectedContent || isAlreadySaved" (click)="handleSaveContent()" id="saveContent">Save</button>
 
-      <button title="Delete content" [disabled]="!selectedContent" (click)="handleDeleteContent(selectedContent!)" id="deleteContent">Delete</button>
+      <button title="Delete content" [disabled]="!selectedContent || isAlreadySaved" (click)="deleteNoSavedContent()" id="deleteContent">Delete</button>
     </div>
 
     <div [ngSwitch]="contentType" id="content">

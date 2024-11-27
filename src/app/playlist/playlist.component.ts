@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Content } from '../content/content.interface';
+import { ContentListService } from '../content-service/content-list.service';
+import { LoginService } from '../../auth-service/login.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-playlist',
@@ -12,8 +16,9 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.scss'
 })
-export class PlaylistComponent {
+export class PlaylistComponent implements OnInit {
 
+  contents: Content[] = [];
   listContentName = new FormControl('', [Validators.required]);
   selectedContent= '';
   saveAttempt:boolean = false;
@@ -21,7 +26,30 @@ export class PlaylistComponent {
   showContent = false;
   content = true;
 
-  constructor(){}
+  constructor(
+    private contentListService: ContentListService,
+    private loginService: LoginService
+  ){}
+
+  ngOnInit():void {
+    const userId = this.loginService.currentUserValue.userId;
+
+    if(!userId) {
+      console.log('No user found');
+      return;
+    }
+
+    this.contentListService.showSavedContent(userId);
+
+    this.contentListService.contents$.pipe(take(1)).subscribe((contents) => {
+      this.contents = contents;
+      console.log("content in playlist", contents);
+    });
+  }
+
+  showContentById(contentId: string) {
+    this.contentListService.showContentById(contentId);
+  }
 
   updateListContentName(): void {
     if (this.selectedContent) {

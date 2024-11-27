@@ -5,8 +5,12 @@
              <h1 id="cmsLogo">MyCMS</h1>
         </a>
     </div>
+
+    <div id="menuToggle" (click)="toggleMenu()">
+        ☰
+      </div>
     
-    <div class="menu-bar">
+    <div class="menu-bar" [class.open]="isMenuOpen">
         <a routerLink="content" id="contentBar">Content</a>
         <a routerLink="playlist" id="playlistBar">Playlist</a>
         <a routerLink="player-device" id="playerDeviceBar">Player Device</a>

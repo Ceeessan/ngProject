@@ -13,7 +13,7 @@ import { LoginService } from '../../auth-service/login.service';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-
+  isMenuOpen: boolean = false;
 
   constructor( private authService : LoginService ) {}
 
@@ -23,5 +23,9 @@ export class HeaderComponent {
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 }

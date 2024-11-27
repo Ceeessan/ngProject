@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -9,6 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class LoginService {
 
   private userUrl = 'http://localhost:3000/api/auth';
+
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
@@ -33,14 +34,17 @@ export class LoginService {
   login(email: string, password: string) {
     this.http.post<any>(`${this.userUrl}/login`, {email, password})
       .subscribe(res => {
+        console.log('Backend response:', res); 
         if (res.token && res.user) {
 
+          const userData = { 
+            userId: res.user.id, 
+            email: res.user.email,
+            firstname: res.user.firstname
+          }
+
           localStorage.setItem('token', res.token);
-
-          const userData = { userId: res.user.id, email: res.user.email}
-
           localStorage.setItem('currentUser', JSON.stringify(userData));
-          console.log('userData:', userData);
           this.currentUserSubject.next(userData);
           
         this.router.navigate(['/home']);
@@ -53,7 +57,6 @@ export class LoginService {
 
   getUser(): string{
     const currentUser = this.currentUserSubject.value;
-    console.log('currentUser:', currentUser?.userId); 
     if (currentUser && currentUser.userId) {
       return currentUser.userId;
     } else {
@@ -81,6 +84,5 @@ export class LoginService {
     localStorage.removeItem('token');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
-    console.log('You are logged out!');
   }
 }

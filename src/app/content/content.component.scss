@@ -13,13 +13,13 @@
             justify-content:center;
             padding-top: 3.5rem;
             align-items:center;
-            height: 12rem;
+            height: 8rem;
 
             #addContentBtn{
                 display:flex;
                 justify-content:center;
-                width: 5rem;
-                height:2.5rem;
+                width: 4.8rem;
+                height:2.3rem;
                 margin-bottom: 4rem;
                 background-color: rgb(99, 153, 99);
                 align-items: center;
@@ -44,9 +44,9 @@
 
                 #titleForContent{
                     border-bottom: 1px solid rgb(179, 179, 179);
-                    padding-top: 1rem;
-                    padding-bottom: 1rem;
-                    font-size: 1.2rem;
+                    padding-top: 0.5rem;
+                    padding-bottom: 0.5rem;
+                    font-size: 1rem;
                     color: rgb(214, 214, 203);
                     background-color: rgb(139, 137, 132);
                 }
@@ -56,6 +56,10 @@
                     display:flex;
                     flex-direction: column;
                     text-align: left;
+                    max-height: 20rem;
+                    overflow-y: auto;
+                    scrollbar-width: thin;
+                    border-bottom: 3px solid  rgb(139, 137, 132);
 
                     #contentListLI{
                         display:flex;
@@ -69,12 +73,11 @@
 
                         #folderIcon{
                             color: rgb(99, 153, 99);
-                            padding-bottom: 0.2rem;
+                            padding-bottom: 0.16rem;
                         }
 
                         .fa-folder:before {
-                            font-size: 1.4rem;
-                            
+                            font-size: 1.1rem;   
                         }
 
                         .list-image-name{
@@ -115,7 +118,7 @@
 
                         .fa-trash:before {
                             color: rgb(47, 47, 92);
-                            font-size:1.2rem;
+                            font-size:1rem;
                             cursor: pointer;
                         }
                     }

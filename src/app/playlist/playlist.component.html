@@ -1,28 +1,32 @@
 <section>
     <div class="playlist-list-container">
         <p id="playlistList">Playlist</p>
-        <ul>
-            <li> 
-                <button title="Overview" id="play">Overwiew</button> 
-                <p >"content"</p> 
-                <i title="Delete" id="trash" class="fa fa-trash"></i>
+        <ul id="contentListUL">
+            <li id="contentListLI" *ngFor="let content of contents">
+                <div class="list-image-name">
+                    <div>
+                        <img *ngIf="content.type === 'image'"
+                        [src]="content.fileurl"
+                        alt="{{content.filename}}"
+                        (click)="showContentById(content._id)"
+                        id="urlImg"
+                        />
+                    </div>
+                    <div>
+                        <video 
+                        *ngIf="content.type === 'video'"
+                        [src]="content.fileurl"
+                        title="{{content.filename}}"
+                        (click)="showContentById(content._id)"
+                        id="urlvideo"
+                        autoplay 
+                        muted
+                        >
+                        </video>
+                    </div>
+                </div>
+                <span id="nameContent" title="{{content.filename}}"> {{ 'Name: ' + content.filename}} </span>
             </li>
-            <li> 
-                <button title="Overview" id="play">Overwiew</button> 
-                <p >"content"</p> 
-                <i title="Delete" id="trash" class="fa fa-trash"></i>
-            </li>
-            <li> 
-                <button title="Overview" id="play">Overwiew</button> 
-                <p >"content"</p> 
-                <i title="Delete" id="trash" class="fa fa-trash"></i>
-            </li>
-            <li> 
-                <button title="Overview" id="play">Overwiew</button> 
-                <p >"content"</p> 
-                <i title="Delete" id="trash" class="fa fa-trash"></i>
-            </li>
-
         </ul>
     </div>
     <div class="playlist-content-container">

@@ -7,7 +7,7 @@ import { registerForm } from '../register.interface';
   providedIn: 'root'
 })
 export class RegisterService {
-
+  private userName: string = '';
   private userUrl = 'http://localhost:3000/api/user';
 
   constructor(private http: HttpClient) { }
