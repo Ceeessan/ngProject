@@ -1,34 +1,48 @@
 <section>
-    <div class="playlist-list-container">
-        <p id="playlistList">Playlist</p>
-        <ul id="contentListUL">
-            <li id="contentListLI" *ngFor="let content of contents">
-                <div class="list-image-name">
-                    <div>
-                        <img *ngIf="content.type === 'image'"
-                        [src]="content.fileurl"
-                        alt="{{content.filename}}"
-                        (click)="showContentById(content._id)"
-                        id="urlImg"
-                        />
+    <div class="playlists-left-container">
+        <form>
+            <div class="input-btn">
+                <input placeholder="Name" type="text" id="createPlaylistInput"/>
+                <button id="addPlaylistBtn">
+                    <i id="iconAddBtn" class="material-icons">add_circle</i>
+                </button>
+            </div>
+            <div>
+                <p id="playlistCreatedSuccessfully">Playlist Created Successfully!</p>
+            </div>         
+        </form>
+        <div class="playlists-list-container">
+            <p id="playlistsText">Playlists</p>
+            <ul id="contentListUL">
+                <li id="contentListLI" *ngFor="let content of contents">
+                    <div class="list-image-name">
+                        <div>
+                            <img *ngIf="content.type === 'image'"
+                            [src]="content.fileurl"
+                            alt="{{content.filename}}"
+                            (click)="showContentById(content._id)"
+                            id="urlImg"
+                            />
+                        </div>
+                        <div>
+                            <video 
+                            *ngIf="content.type === 'video'"
+                            [src]="content.fileurl"
+                            title="{{content.filename}}"
+                            (click)="showContentById(content._id)"
+                            id="urlvideo"
+                            autoplay 
+                            muted
+                            >
+                            </video>
+                        </div>
                     </div>
-                    <div>
-                        <video 
-                        *ngIf="content.type === 'video'"
-                        [src]="content.fileurl"
-                        title="{{content.filename}}"
-                        (click)="showContentById(content._id)"
-                        id="urlvideo"
-                        autoplay 
-                        muted
-                        >
-                        </video>
-                    </div>
-                </div>
-                <span id="nameContent" title="{{content.filename}}"> {{ 'Name: ' + content.filename}} </span>
-            </li>
-        </ul>
+                    <span id="nameContent" title="{{content.filename}}"> {{ 'Name: ' + content.filename}} </span>
+                </li>
+            </ul>
+        </div>
     </div>
+    
     <div class="playlist-content-container">
         <div class="playlist-edit-panel" *ngIf="content">
 

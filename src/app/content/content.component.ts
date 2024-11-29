@@ -7,7 +7,6 @@ import { map, take, tap } from 'rxjs';
 import { FileUploadService } from '../content-service/file-upload.service';
 import { LoginService } from '../../auth-service/login.service';
 import { Router } from '@angular/router';
-import { ContentListService } from '../content-service/content-list.service';
 
 type  ContentType= 'image' | 'video' | 'invalid' | 'noContent';
 
@@ -30,13 +29,13 @@ export class ContentComponent implements OnInit {
   showContent: boolean = false;
   showModal: boolean = false;
   isAlreadySaved: boolean = false;
+  activeDropdownContentId: string | null = null;
 
   constructor(
     private dialog: MatDialog,
     private fileUploadService: FileUploadService,
     private loginService: LoginService,
     private router: Router,
-    private contentListService: ContentListService
   ) {}
 
   addFileHandler() {
@@ -89,26 +88,7 @@ export class ContentComponent implements OnInit {
       console.log("No userId found!");
       return;
     }
-  
-    this.contentListService.showSavedContent(userId);
-  
-    this.contentListService.contents$.pipe(take(1)).subscribe((contents) => {
-      this.contents = contents;
-      console.log('content loaded', contents);
-    });
-  
-    this.contentListService.selectedContent$.subscribe((selectedContent) => {
-      if (selectedContent) {
-        this.selectedContent = selectedContent;
-        this.contentType = selectedContent.type as ContentType;
-        this.showContent = true;
-        this.isAlreadySaved = true;
-      } else {
-        this.selectedContent = undefined;
-        this.showContent = false;
-        this.isAlreadySaved = false;
-      }
-    });
+    this.showSavedContent(userId);
   }
 
   handleSaveContent (): void {
@@ -163,6 +143,46 @@ export class ContentComponent implements OnInit {
     this.showContent = false;
   }
 
+  showSavedContent(userId: string) {
+    this.fileUploadService.getAllFiles(userId).pipe(take(1)).subscribe(
+      (contents) => {
+        if (contents && contents.length > 0) {
+          const filterAndSortContent = contents
+            .filter(content => content.userId === userId)
+            .sort((a, b) => {
+              const dateA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+              const dateB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+              return dateB - dateA;
+            });
+  
+          this.contents = filterAndSortContent;
+          console.log("Updated content list:", filterAndSortContent);
+        } else {
+          this.contents = [];
+        }
+      },
+      (error) => {
+        console.log("Failed to load content: ", error);
+        this.contents = [];
+      }
+    );
+  }
+
+  showContentById(contentId: string) {
+    const selectedContentById = this.contents.find(content => content._id === contentId)
+    if (selectedContentById) {
+      this.selectedContent = selectedContentById;
+      this.contentType = selectedContentById.type as ContentType;
+      this.showContent = true;
+      this.isAlreadySaved = true;
+
+    } else {
+      this.selectedContent = undefined;
+      this.showContent = false;
+      this.isAlreadySaved = false;
+    }
+}
+
   handleDeleteContent(content: Content): void { 
 
       const confirmRemove = this.dialog.open(ConfirmComponent,
@@ -204,11 +224,21 @@ export class ContentComponent implements OnInit {
     })
   }
 
-  showContentById(contentId: string) {
-    this.contentListService.showContentById(contentId);
-  }
+toggleDropdown(contentId: string): void {
 
-  goToPlayerlist() {
-    this.router.navigate(['/playlist']);
+  if(this.activeDropdownContentId === contentId) {
+    this.activeDropdownContentId = null;
+  } else {
+    this.activeDropdownContentId = contentId;
   }
+}
+
+editContent(content: Content) {
+  console.log("edit content ", content);
+  this.router.navigate(['/playlist']);
+}
+
+addToPlaylist(content: Content): void {
+  console.log('Lägger till innehåll i playlist: ', content);
+}
 }

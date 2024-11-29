@@ -85,6 +85,10 @@
             &:hover::after {
                 transform: scaleX(1); 
             }
+
+            &.active::after{
+                transform: scaleX(1);
+            }
         }
 
         #playlistBar{
@@ -109,6 +113,10 @@
 
             &:hover::after {
                 transform: scaleX(1); 
+            }
+
+            &.active::after{
+                transform: scaleX(1);
             }
         }
 
@@ -135,10 +143,14 @@
             &:hover::after {
                 transform: scaleX(1); 
             }
+
+            &.active::after{
+                transform: scaleX(1);
+            }
         }
 
         #loginBar{
-            color: rgb(214, 214, 203);
+            color: rgb(36, 36, 36);
             position: relative; 
             padding-bottom: 0.1rem;
             margin-left: 2rem;
@@ -153,7 +165,7 @@
                 bottom: 0; 
                 width: 100%; 
                 height: 1px; 
-                background-color: rgb(201, 200, 200);  
+                background-color: rgb(36, 36, 36);  
                 transform: scaleX(0); 
                 transition: transform 0.3s ease;
             }

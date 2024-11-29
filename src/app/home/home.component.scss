@@ -19,16 +19,15 @@ section{
             text-align: center;
 
             #showContentBtn{
-                width: 6rem;
-                height:2.3rem;
-                padding:0.3;
-                margin-bottom: 4rem;
-                background-color: rgb(99, 153, 99);
-                align-items: center;
-                border-radius: 3%;
-                color: white;
-                cursor:pointer;
-                border:none;
+                margin-top:0.3rem;
+                    width: 13rem;
+                    height: 2rem;
+                    border:none;
+                    background-color: rgb(196, 96, 112);
+                    color:white;
+                    font-weight: bold;
+                    border-radius: 0.1rem;
+                    cursor:pointer;
             }
         }
         #homeImg{

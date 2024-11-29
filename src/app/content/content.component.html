@@ -11,7 +11,7 @@
       <div class="saved-content">
         <p id="titleForContent"> Saved content</p>
           <ul id="contentListUL">
-            <li id="contentListLI" *ngFor="let content of contents" >     
+            <li id="contentListLI" *ngFor="let content of contents" [style.position]="'relative'">     
               <div class="list-image-name">
                 <div>
                   <img 
@@ -39,7 +39,30 @@
                   </p>         
                 </div>
                 <span id="nameContent" title="{{content.filename}}"> {{ 'Name: ' + content.filename}} </span>
-                <i id="folderIcon" class="fas fa-folder" (click)="goToPlayerlist()"></i>
+
+                <i 
+                id="editIcon" 
+                class="far fa-edit"
+                (click)="toggleDropdown(content._id)"
+                ></i>
+                <div class="dopdown-values" *ngIf="activeDropdownContentId === content._id">
+                  <span id="editContent">
+                    Edit Content
+                    <button id="editBtn"
+                    (click)="editContent(content)">
+                      <i id="edit" class="far fa-edit"></i>
+                    </button>
+                  </span>
+
+                  <span id="addToPlaylistBtn">
+                    Add to Playlist 
+                    <button id="addIconBtn"
+                    (click)="addToPlaylist(content)">
+                      <i id="addIcon" class="material-icons">add_circle</i>
+                    </button>
+                  </span>
+                </div>
+              
                 <a title="Delete" id="trashIcon" (click)="handleDeleteContent(content)"><i class="fa fa-trash"></i></a>
             </li>
           </ul>
