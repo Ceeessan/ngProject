@@ -1,60 +1,69 @@
 <section>
     <div class="playlists-left-container">
-        <form>
+        <form (ngSubmit)="createPlaylist()">
             <div class="input-btn">
-                <input placeholder="Name" type="text" id="createPlaylistInput"/>
-                <button id="addPlaylistBtn">
+                <input placeholder="Name" type="text" id="createPlaylistInput" [formControl]="playlistNameControl"/>
+                <button type="submit" id="addPlaylistBtn" [disabled]="playlistNameControl.value === ''">
                     <i id="iconAddBtn" class="material-icons">add_circle</i>
                 </button>
             </div>
             <div>
-                <p id="playlistCreatedSuccessfully">Playlist Created Successfully!</p>
+                <p id="playlistCreatedSuccessfully" *ngIf="createdPlaylist">Playlist Created Successfully!</p>
+                <em *ngIf="showErrorMsg" id="showErrorMsg"> A playlist with this name already exists.</em>
             </div>         
         </form>
-        <div class="playlists-list-container">
+
+        <div class="playlists-list-container" *ngIf="playlists.length > 0 else noPlaylists">
             <p id="playlistsText">Playlists</p>
-            <ul id="contentListUL">
-                <li id="contentListLI" *ngFor="let content of contents">
-                    <div class="list-image-name">
-                        <div>
-                            <img *ngIf="content.type === 'image'"
-                            [src]="content.fileurl"
-                            alt="{{content.filename}}"
-                            (click)="showContentById(content._id)"
-                            id="urlImg"
-                            />
-                        </div>
-                        <div>
-                            <video 
-                            *ngIf="content.type === 'video'"
-                            [src]="content.fileurl"
-                            title="{{content.filename}}"
-                            (click)="showContentById(content._id)"
-                            id="urlvideo"
-                            autoplay 
-                            muted
-                            >
-                            </video>
-                        </div>
-                    </div>
-                    <span id="nameContent" title="{{content.filename}}"> {{ 'Name: ' + content.filename}} </span>
+            <ul id="playlistListUL">
+                <li id="playlistListLI" *ngFor="let playlist of playlists">
+                    <button id="iconFolderBtn">
+                        <i class='fas fa-folder'></i>
+                    </button>
+                    <span id="nameContent" title="{{playlist.name}}"> {{ 'Name: ' + playlist.name}} </span>
+                    <button id="iconEditBtn" (click)="editPlaylist(playlist)">
+                        <i id="edit" class="far fa-edit"></i>
+                      </button>
+                    <button id="iconDeleteBtn" 
+                    (click)="handleDeletePlaylist(playlist._id)">
+                        <i class="material-icons">delete</i>
+                    </button>
                 </li>
             </ul>
         </div>
+        <ng-template #noPlaylists>
+            <p id="createPlaylistMsg">Create a Playlist above.</p>
+        </ng-template>
     </div>
     
-    <div class="playlist-content-container">
-        <div class="playlist-edit-panel" *ngIf="content">
+    <div class="playlist-right-container">
+        <div class="playlist-edit-panel" *ngIf="isEditing">
+            <div class="btns-handle-edit">
+                <button id="saveBtn"> Save </button>
+                <input type="name" id="changeNamePlaylistInput" placeholder="New name for playlist"/>
+                <button id="deleteBtn"> Delete </button>
+            </div>
+            <div class="playlist-info-container">
+                <div class="info-container">
+                    <h3 id="playlist-name"> Playlist name: {{selectedPlaylist?.name}}</h3>
+                    <p id="playlist-time"> Created: {{selectedPlaylist?.timestamp | date:'yyy-MM-dd'}} </p>
+                    <p id="playlist-content-amount"> Amount of content: {{selectedPlaylist?.contentArray.length}} </p>
+                </div>
+                <div class="playlist-content-list">
+                    <p id="playlistContentText"> Playlist Content</p>
 
-            <a title="Edit content" id=" editIcon" (click)="editContentFromList(content)" ><i class="fas fa-edit"></i></a>
-            <i title="Schedule" class="far fa-calendar-alt"></i>
-            <!-- <i title="Download" class="fas fa-download"></i> -->
-            <button title="Continue" id="deletePanel">Continue</button>
-
-            <div class="input-validator" *ngIf="showListContentName">
-                <input id="nameContentInput" type="text" [formControl]="listContentName" placeHolder="Name your content" required valid/>
-                <em id="errorMessage" *ngIf="listContentName.invalid && (listContentName.touched || saveAttempt)">Name on your content is required</em>
-              </div>
+                    <ul>
+                        <li id="content-in-playlist" *ngFor="let content of playlistContents">
+                                <img id="contentImg" [src]="content.fileurl" alt="ContentImage"/>
+                                <p id="contentFilemane">{{content.filename}}</p>
+                                <button id="listDeleteContent" (click)="deleteContentFromPlaylist(content._id)">
+                            <i class="material-icons">delete</i>
+                        </button>
+                        </li>
+                    </ul>
+    
+                </div>
+            </div>  
         </div>
     </div>
 </section>

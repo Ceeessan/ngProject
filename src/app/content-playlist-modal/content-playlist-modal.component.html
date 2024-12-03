@@ -1,0 +1,15 @@
+<section>
+    <div class="playlist-text-and-btn">
+        <h3 id="playlistText">Select Playlist</h3>
+        <button id="playlistModalBtn" mat-button (click)="close()">X</button>
+    </div>
+    
+    <ul id="playlistListUL">
+        <li id="playlistListLI" *ngFor="let playlist of playlists">
+            {{playlist.name}}
+            <button id="addPlaylistBtn" (click)="addToPlaylist(playlist._id)">
+                <i id="iconAddBtn" class="material-icons">add_circle</i>
+            </button>
+        </li>
+    </ul>
+</section>

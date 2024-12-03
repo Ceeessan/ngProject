@@ -7,6 +7,7 @@ import { map, take, tap } from 'rxjs';
 import { FileUploadService } from '../content-service/file-upload.service';
 import { LoginService } from '../../auth-service/login.service';
 import { Router } from '@angular/router';
+import { ContentPlaylistModalComponent } from '../content-playlist-modal/content-playlist-modal.component';
 
 type  ContentType= 'image' | 'video' | 'invalid' | 'noContent';
 
@@ -238,7 +239,19 @@ editContent(content: Content) {
   this.router.navigate(['/playlist']);
 }
 
-addToPlaylist(content: Content): void {
-  console.log('Lägger till innehåll i playlist: ', content);
+openAddToPlaylistModal(contentId: string): void {
+  const dialogRef = this.dialog.open(ContentPlaylistModalComponent, {
+    data: {contentId}
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if(result) {
+      console.log("Content is added to the playlist :", result);
+    }
+  })
+}
+
+addToPlaylist(contentId: string): void {
+  this.openAddToPlaylistModal(contentId);
 }
 }
