@@ -37,7 +37,19 @@ export class ContentPlaylistModalComponent implements OnInit{
 
     this.playlistService.getPlaylists(userId).subscribe({
       next: (playlists) => {
-        this.playlists = playlists;
+        if(playlists && playlists.length > 0) {
+          const filterAndSortPlaylists = playlists
+          .filter(playlist => playlist.userId === userId)
+          .sort((a,b) => {
+            const dateA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+            const dateB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+            return dateB - dateA;
+          })
+          this.playlists = filterAndSortPlaylists;
+        } else {
+          this.playlists = [];
+        }
+        
       },
       error: (err) => {
         console.log("Failed to load playlists", err);

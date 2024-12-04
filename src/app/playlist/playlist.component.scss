@@ -80,22 +80,34 @@ section{
             #playlistListUL{
                 display:flex;
                 flex-direction: column;
+                position:relative;
+
                 #playlistListLI {
                     display:flex;
                     flex-direction: row;
-                    justify-content: space-between;
                     padding: 1rem;
                     border-bottom: 0.5px solid rgb(165, 165, 165);
     
                     #iconFolderBtn{
                         border:none;
                         font-size: 1.5rem;
+                        padding-right: 2rem;
                         color: rgb(99, 153, 99);
                         background-color: rgb(243, 243, 243);
                         cursor: pointer;
                     }
 
+                    #namePlaylist{
+                        padding-top: 0.3rem;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        width: 15rem;
+                    }
+
                     #iconEditBtn{
+                        position:absolute;
+                        right: 3rem;
                         background-color:  rgb(247, 247, 247);
                         font-size: 1.5rem;
                         color: rgb(99, 153, 99);
@@ -104,6 +116,8 @@ section{
                     }
 
                     #iconDeleteBtn{
+                        position:absolute;
+                        right: 1rem;
                         color: rgb(47, 47, 92);
                         font-size:1.5rem;
                         cursor: pointer;

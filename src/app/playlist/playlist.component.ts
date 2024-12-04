@@ -102,7 +102,6 @@ export class PlaylistComponent implements OnInit {
       console.log("Sending contentIds:");
       this.playlistService.getContentByIds(this.selectedPlaylist.contentArray).subscribe(
         (contents) => {
-          console.log('ooooooooooooooooo',contents);
           this.playlistContents = contents;
         },
         (error) => console.log("Failed to load contents ", error)

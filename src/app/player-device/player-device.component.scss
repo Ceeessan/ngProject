@@ -1,8 +1,3 @@
-#playerDeviceTitle{
-    height: 3rem;
-    text-align: center;
-}
-
 .player-device-page{
     display:flex;
     flex-direction:row;
@@ -11,7 +6,46 @@
     .list-side{
         width: 20%;
         height: 100vh;
-        border: 1px solid grey;
+        border-right: 1px solid rgb(189, 189, 189);
+
+        #playlistText{
+            text-align:center;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            font-size: 1rem;
+            color: rgb(214, 214, 203);
+            background-color: rgb(139, 137, 132);
+        }
+
+        #playlistLI{
+            display:flex;
+            flex-direction: row;
+            position:relative;
+            padding-left: 0.5rem;
+            padding-top:1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid grey;
+
+            #iconArrowBtn{
+                border:none;
+                margin-right: 2.5rem;
+                transition: transform 0.3s ease-in-out;
+
+      
+            }
+
+            #namePlaylist{
+                font-size: 0.9rem;
+            }
+
+            #iconPlayBtn{
+                position:absolute;
+                right: 0.8rem;
+                border:none;
+                color:rgb(99, 153, 99);
+            }
+
+        }
     }
 
     .play-content-side{
@@ -19,13 +53,13 @@
         height: 100vh;
 
         #showingContent{
-            border: 1px solid grey;
+            // border: 1px solid grey;
             width: 100%;
             height: 20rem;
         }
 
         #editingPanel{
-            border: 1px solid grey;
+            // border: 1px solid grey;
             width: 100%;
             height: 35rem;;
         }

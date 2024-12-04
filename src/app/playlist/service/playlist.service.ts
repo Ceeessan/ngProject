@@ -42,7 +42,7 @@ export class PlaylistService {
       'Authorization':`Bearer ${token}`.trim()
     })
 
-    const body = { contentIds };  // Här skapar vi objektet { contentIds: [...] }
+    const body = { contentIds };  
     console.log("Sending body:", body);
 
     return this.http.post<Content[]>(`${this.playlistUrl}/contents`, {ids: contentIds}, { headers });

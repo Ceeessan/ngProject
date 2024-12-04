@@ -184,6 +184,13 @@ export class ContentComponent implements OnInit {
     }
 }
 
+// editContent(userId : string) {
+//   const userId = this.loginService.getUser();
+//   if (userId) {
+
+//   }
+// }
+
   handleDeleteContent(content: Content): void { 
 
       const confirmRemove = this.dialog.open(ConfirmComponent,
@@ -232,11 +239,6 @@ toggleDropdown(contentId: string): void {
   } else {
     this.activeDropdownContentId = contentId;
   }
-}
-
-editContent(content: Content) {
-  console.log("edit content ", content);
-  this.router.navigate(['/playlist']);
 }
 
 openAddToPlaylistModal(contentId: string): void {

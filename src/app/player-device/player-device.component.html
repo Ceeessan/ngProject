@@ -1,15 +1,28 @@
-<h3 id="playerDeviceTitle">Player Device</h3>
-
 <section class="player-device-page">
     <section class="list-side">
-        <p>List</p>
+        <h3  id="playlistText">Playlist</h3>
+        <div>
+            <ul>
+                <li *ngFor="let playlist of playlists" id="playlistLI">
+                    <button id="iconArrowBtn">
+                        <i class='fas fa-arrow-right'></i>
+                    </button>
+                    <span id="namePlaylist" title="{{playlist.name}}"> {{ 'Name: ' + playlist.name}} </span>
+                    <button id="iconPlayBtn" (click)="playPlaylist()">
+                        <i class='fas fa-play'></i>
+                    </button>
+                </li>
+            </ul>
+        </div>  
     </section>
-    <section class="play-content-side">
-        <div id="showingContent">
-    <p> video/image</p>
+
+    <section class="play-content-side" *ngIf="showContentFromPlaylist">
+
+        <p> {{'playlist name'}} </p>
+
+        <div>
+
         </div>
-        <div id="editingPanel">
-    <p>panel and info</p>
-        </div>
+
     </section>
 </section>
