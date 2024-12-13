@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Playlists } from './playlist.interface';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PlaylistItem, Playlists } from './playlist.interface';
 import { PlaylistService } from './service/playlist.service';
 import { take } from 'rxjs';
 import { LoginService } from '../../auth-service/login.service';
@@ -24,6 +24,8 @@ export class PlaylistComponent implements OnInit {
 
   playlists: Playlists[] = [];
   playlistNameControl = new FormControl('');
+  playlist: any = { contents: [] };
+
   createdPlaylist: boolean = false;
   selectedPlaylist: any = null;
   isEditing: boolean = false;
@@ -36,10 +38,15 @@ export class PlaylistComponent implements OnInit {
     private dialog: MatDialog,
   ){}
 
+  ngOnInit():void {
+    const userId = this.loginService.getUser();
+    this.fetchPlaylists(userId);
+
+  }
+
   createPlaylist():void {
     const userId = this.loginService.getUser();
     const playlistName = this.playlistNameControl.value;
-    
 
     if(!playlistName || playlistName.trim() === ' ') {
       console.log('Playlist name is required');
@@ -70,11 +77,6 @@ export class PlaylistComponent implements OnInit {
     })
   }
 
-  ngOnInit():void {
-    const userId = this.loginService.getUser();
-    this.fetchPlaylists(userId);
-  }
-
   fetchPlaylists(userId: string): void {
     this.playlistService.getPlaylists(userId).pipe(take(1)).subscribe((playlists) => {
       console.log('Fetched playlists:', playlists);
@@ -97,16 +99,52 @@ export class PlaylistComponent implements OnInit {
   }
 
   loadPlaylistContent() {
-    console.log("Selected Playlist contentArray:", this.selectedPlaylist?.contentArray);
     if (this.selectedPlaylist?.contentArray.length>0) {
       console.log("Sending contentIds:");
       this.playlistService.getContentByIds(this.selectedPlaylist.contentArray).subscribe(
         (contents) => {
+          console.log("contentsss", contents);
+          if(!Array.isArray(contents)) {
+            console.log("Error: Content is not an array");
+            this.playlistContents = [];
+            return;
+          }
           this.playlistContents = contents;
         },
         (error) => console.log("Failed to load contents ", error)
       )
     }
+  }
+
+  updateDuration(contentId: string, newDuration: number): void {
+    if (!this.selectedPlaylist) {
+      console.log("No playlist selected");
+      return;
+    }
+
+    const playlistItem = this.selectedPlaylist.contentArray.find((item: PlaylistItem) => item.contentId === contentId);
+
+        if(!playlistItem) {
+          console.log("Item not found");
+          return;
+        }
+
+        playlistItem.duration = newDuration;
+
+        this.playlistService.updateDuration(this.selectedPlaylist._id, contentId, newDuration)
+        .pipe(take(1))
+        .subscribe(
+          () => {
+            console.log("Duration updated successfully!", contentId);
+          },
+          (error) => {
+            console.log("Failed to update duration", error);
+          }
+        )
+  }
+
+  getTotalDuration():number {
+    return this.playlistContents.reduce((total, content) => total + (content.duration || 0), 0);
   }
 
   handleDeletePlaylist(playlistId: string): void { 
@@ -137,21 +175,30 @@ editPlaylist(playlist: any): void {
 
 deleteContentFromPlaylist(contentId: string): void {
   if (!this.selectedPlaylist) return;
+  const confirmRemove = this.dialog.open(ConfirmComponent,
+    { data: { contentId : contentId }
+  });
 
+confirmRemove.afterClosed().pipe(take(1)).subscribe( result => {
+  if (!result) {
+    return;
+  }
   const playlistId = this.selectedPlaylist._id;
 
   this.playlistService
   .removeContentFromPlaylist(playlistId, contentId)
   .pipe(take(1))
   .subscribe(
-    (updatedPlaylist) => {
-      console.log("Content removed from playlist! ", updatedPlaylist);
+    (resp) => {
+      console.log("Content removed from playlist! ", resp.updatedPlaylist);
 
-      this.selectedPlaylist.contentArray = this.selectedPlaylist.contentArray.filter((content: string) => content.toString() !== contentId);
+      this.selectedPlaylist.contentArray = resp.updatedPlaylist.contentArray;
+      this.playlistContents = this.playlistContents.filter((content) => content._id.toString() !== contentId)
 
     }, (error) => {
       console.log("Failed to remove content ", error);
     }
   )
+})
 }
 }

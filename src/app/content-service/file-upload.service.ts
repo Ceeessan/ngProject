@@ -27,7 +27,6 @@ export class FileUploadService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     })
-
     return this.http.post<any>(this.contentUrl, formData, {headers});
   }
 
@@ -41,14 +40,18 @@ export class FileUploadService {
     return this.http.get<Content[]>(`${this.contentUrl}`, {headers,params});
   }
 
-  //Not using right now.
-  getFileById(id: string): Observable<Content>{
+  updateContent(contentId: string, createdName: string | FormData): Observable<any>{
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`.trim() 
+      'Authorization': `Bearer ${token}`.trim() ,
+      'Content-Type': 'application/json'
     })
-    
-    return this.http.get<Content>(`${this.contentUrl}/${id}`, {headers})
+
+    const body = {
+      createdName: createdName
+    }
+
+    return this.http.put<any>(`${this.contentUrl}/${contentId}`, body, {headers})
   }
 
   deleteFile(contentId: string): Observable<any> {

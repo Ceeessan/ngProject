@@ -30,8 +30,6 @@
                 border:none;
                 margin-right: 2.5rem;
                 transition: transform 0.3s ease-in-out;
-
-      
             }
 
             #namePlaylist{
@@ -44,24 +42,28 @@
                 border:none;
                 color:rgb(99, 153, 99);
             }
-
         }
     }
 
     .play-content-side{
+        display:flex;
+        justify-content: center;
         width: 80%;
         height: 100vh;
 
-        #showingContent{
-            // border: 1px solid grey;
-            width: 100%;
-            height: 20rem;
+        #listNameText{
+            padding: 5rem;
+            font-size: 1.2rem;
         }
 
-        #editingPanel{
-            // border: 1px solid grey;
-            width: 100%;
-            height: 35rem;;
+        #content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0; 
+            width: 10rem;
+            height: 10rem;
+            background-color: red;
         }
     }
 }

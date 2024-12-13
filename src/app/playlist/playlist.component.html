@@ -31,9 +31,9 @@
                 </li>
             </ul>
         </div>
-        <ng-template #noPlaylists>
-            <p id="createPlaylistMsg">Create a Playlist above.</p>
-        </ng-template>
+    <ng-template #noPlaylists>
+        <p id="createPlaylistMsg">Create a Playlist above.</p>
+    </ng-template>
     </div>
     
     <div class="playlist-right-container">
@@ -41,27 +41,37 @@
             <div class="btns-handle-edit">
                 <button id="saveBtn"> Save </button>
                 <input type="name" id="changeNamePlaylistInput" placeholder="New name for playlist"/>
-                <button id="deleteBtn"> Delete </button>
             </div>
             <div class="playlist-info-container">
                 <div class="info-container">
-                    <h3 id="playlist-name"> Playlist name: {{selectedPlaylist?.name}}</h3>
-                    <p id="playlist-time"> Created: {{selectedPlaylist?.timestamp | date:'yyy-MM-dd'}} </p>
+                    <h3  id="playlistName" [title]="selectedPlaylist?.name"> Playlist name: {{selectedPlaylist?.name}}</h3>
+                    <p id="playlist-time" > Created: {{selectedPlaylist?.timestamp | date:'yyy-MM-dd'}} </p>
                     <p id="playlist-content-amount"> Amount of content: {{selectedPlaylist?.contentArray.length}} </p>
-                </div>
-                <div class="playlist-content-list">
-                    <p id="playlistContentText"> Playlist Content</p>
+                    <p> Total duration for Playlist: {{getTotalDuration()}}</p>
+            </div>
 
-                    <ul>
-                        <li id="content-in-playlist" *ngFor="let content of playlistContents">
-                                <img id="contentImg" [src]="content.fileurl" alt="ContentImage"/>
-                                <p id="contentFilemane">{{content.filename}}</p>
-                                <button id="listDeleteContent" (click)="deleteContentFromPlaylist(content._id)">
+            <div class="playlist-content-list">
+                <p id="playlistContentText"> Playlist Content</p>
+                <ul>
+                    <li id="content-in-playlist" *ngFor="let content of playlistContents">
+                        <img id="contentImg" [src]="content.fileurl" alt="ContentImage"/>
+                        <p id="contentFilename" [title]="content.createdName">{{'Name: ' + content.createdName}}</p> 
+                        
+                        <div>
+                            <input 
+                                id="durationInput"
+                                type="number" 
+                                [(ngModel)]="content.duration"
+                                />
+                                <button  id="durationBtn" (click)="updateDuration(content._id, content.duration)">Set duration</button>
+                                <span id="durationSeconds">{{ content.duration }} seconds</span>
+                        </div>
+                                
+                        <button id="listDeleteContent" (click)="deleteContentFromPlaylist(content._id)">
                             <i class="material-icons">delete</i>
                         </button>
                         </li>
                     </ul>
-    
                 </div>
             </div>  
         </div>

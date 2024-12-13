@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Playlists } from '../playlist.interface';
+import { PlaylistItem, Playlists } from '../playlist.interface';
 import { Content } from '../../content/content.interface';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class PlaylistService {
 
   constructor(private http: HttpClient) { }
 
-  createPlaylist(userId: string, name: string, contentArray: string[]): Observable<any> {
+  createPlaylist(userId: string, name: string, contentArray: PlaylistItem[]): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`.trim()
@@ -36,7 +36,7 @@ export class PlaylistService {
     return this.http.get<Playlists[]>(this.playlistUrl, { headers, params });
   }
 
-  getContentByIds(contentIds: string[]): Observable<Content[]> {
+  getContentByIds(contentIds: PlaylistItem[]): Observable<Content[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization':`Bearer ${token}`.trim()
@@ -45,7 +45,7 @@ export class PlaylistService {
     const body = { contentIds };  
     console.log("Sending body:", body);
 
-    return this.http.post<Content[]>(`${this.playlistUrl}/contents`, {ids: contentIds}, { headers });
+    return this.http.post<Content[]>(`${this.playlistUrl}/contents`, {playlistItems: contentIds}, { headers });
   }
 
   addContentToPlaylist(playlistId: string, contentId: string){
@@ -56,6 +56,17 @@ export class PlaylistService {
 
     const url = `${this.playlistUrl}/${playlistId}/content`;
     return this.http.put(url, {contentId},{headers});
+  }
+
+  updateDuration(playlistId: string, contentId: string, duration: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`.trim()
+    })
+
+    const url = `${this.playlistUrl}/${playlistId}/content/${contentId}/duration`;
+    const body = {duration};
+    return this.http.put<any>(url, body, {headers})
   }
 
   deletePlaylist(playlistId:string): Observable<any>{

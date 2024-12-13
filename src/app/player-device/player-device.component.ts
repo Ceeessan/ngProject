@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaylistService } from '../playlist/service/playlist.service';
 import { take } from 'rxjs';
-import { Playlists } from '../playlist/playlist.interface';
+import { PlaylistItem, Playlists } from '../playlist/playlist.interface';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../auth-service/login.service';
+import { PlayerService } from './player-service/player.service';
+import { Content } from '../content/content.interface';
 
 @Component({
   selector: 'app-player-device',
@@ -15,14 +17,16 @@ import { LoginService } from '../../auth-service/login.service';
 export class PlayerDeviceComponent implements OnInit {
 
   playlists: Playlists[] = [];
-  isContentVisible: boolean = true
   showContentFromPlaylist: boolean = false;
   selectedPlaylist: any = null;
+  mediaFiles: Content[] = [];
+  pageContent: string = '';
 
 
   constructor(
     private playlistService: PlaylistService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private playerService : PlayerService
   ){}
 
   ngOnInit(){
@@ -51,7 +55,17 @@ export class PlayerDeviceComponent implements OnInit {
     })
   }
 
-  playPlaylist() {
+  playPlaylist(playlistId: string):void {
     this.showContentFromPlaylist = true;
+    this.selectedPlaylist = this.playlists.find(playlist => playlist._id === playlistId) || null;
+
+    console.log(this.selectedPlaylist);
+
+    if(this.selectedPlaylist) {
+      this.playerService.getMediaPlayer().subscribe(data => {
+        this.pageContent = data;
+   
+      });  
+    }
   }
 }

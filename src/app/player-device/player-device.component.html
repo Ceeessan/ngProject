@@ -8,7 +8,7 @@
                         <i class='fas fa-arrow-right'></i>
                     </button>
                     <span id="namePlaylist" title="{{playlist.name}}"> {{ 'Name: ' + playlist.name}} </span>
-                    <button id="iconPlayBtn" (click)="playPlaylist()">
+                    <button id="iconPlayBtn" (click)="playPlaylist(playlist._id)">
                         <i class='fas fa-play'></i>
                     </button>
                 </li>
@@ -17,12 +17,9 @@
     </section>
 
     <section class="play-content-side" *ngIf="showContentFromPlaylist">
-
-        <p> {{'playlist name'}} </p>
-
-        <div>
-
+        <div *ngIf="selectedPlaylist">
+            <p id="listNameText"> {{selectedPlaylist.name}} </p>
+            <div id="content" [innerHTML]="pageContent"></div>
         </div>
-
     </section>
 </section>

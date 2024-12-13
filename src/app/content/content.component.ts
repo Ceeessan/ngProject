@@ -6,8 +6,8 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 import { map, take, tap } from 'rxjs';
 import { FileUploadService } from '../content-service/file-upload.service';
 import { LoginService } from '../../auth-service/login.service';
-import { Router } from '@angular/router';
 import { ContentPlaylistModalComponent } from '../content-playlist-modal/content-playlist-modal.component';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 type  ContentType= 'image' | 'video' | 'invalid' | 'noContent';
 
@@ -15,7 +15,9 @@ type  ContentType= 'image' | 'video' | 'invalid' | 'noContent';
   selector: 'app-content',
   standalone: true,
   imports: [ 
-    CommonModule, 
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
@@ -31,17 +33,32 @@ export class ContentComponent implements OnInit {
   showModal: boolean = false;
   isAlreadySaved: boolean = false;
   activeDropdownContentId: string | null = null;
+  showInputChangeName: boolean = false;
+  contentForm!: FormGroup;
+  selectedImageUrl: string | undefined;
+  isNotEditing: boolean = true;
 
   constructor(
     private dialog: MatDialog,
     private fileUploadService: FileUploadService,
     private loginService: LoginService,
-    private router: Router,
+    private fb: FormBuilder
   ) {}
 
   addFileHandler() {
-    
+    if(!this.isNotEditing) {
+      this.resetSelectedContent();
+    }
     this.fileInput.nativeElement.click();
+  }
+
+  private resetSelectedContent() {
+    this.selectedContent = undefined;
+    this.selectedImageUrl = undefined;
+    this.contentType = 'noContent';
+    this.isNotEditing = true;
+    this.showInputChangeName = false;
+    this.isAlreadySaved= false;
   }
 
   redirectFileHandler(fileEvent: Event){
@@ -52,13 +69,12 @@ export class ContentComponent implements OnInit {
   
     const fileUrl = URL.createObjectURL(file);
     this.contentType = this.getContentType(file.type);
-    this.showContent = true;
-    this.isAlreadySaved = false;
-    
+
     this.selectedContent = {
       ...this.createContentObject(file, fileUrl),
       actualFile: file
     } 
+    this.isNotEditing = true;
   }
   
   private getContentType(fileType: string): ContentType {
@@ -68,21 +84,28 @@ export class ContentComponent implements OnInit {
   }
 
   private createContentObject(file: File, fileUrl: string): Content {
+      this.isNotEditing = true;
       const now = new Date();
       const customTimestamp = new Date(now.getTime());
     return {
       _id: '',
       filename: file.name,
+      createdName: file.name,
       type: this.contentType,
       fileurl: fileUrl,
       timestamp: customTimestamp,
       userId: this.loginService.getUser() || '',
+      duration: 10,
       hasPlaylists: false,
       playlists: []
     }
   }
 
   ngOnInit() {
+    this.contentForm = this.fb.group({
+      newContentName: ['', [Validators.required]]
+    })
+
     const userId = this.loginService.currentUserValue.userId;
   
     if (!userId) {
@@ -93,6 +116,7 @@ export class ContentComponent implements OnInit {
   }
 
   handleSaveContent (): void {
+    this.contentType = 'noContent';
     const userId = this.loginService.currentUserValue.userId;
 
     if (!this.selectedContent || !this.selectedContent.actualFile) {
@@ -114,6 +138,8 @@ export class ContentComponent implements OnInit {
       formData.append('hasPlaylists', this.selectedContent.hasPlaylists!.toString()); 
     }
     formData.append('playlists', JSON.stringify(this.selectedContent!.playlists));
+
+    formData.append('createdName', file.name)
    
     this.fileUploadService.fileHandler(formData)
     .pipe(
@@ -141,10 +167,10 @@ export class ContentComponent implements OnInit {
 
   private resetContent() {
     this.selectedContent = undefined;
-    this.showContent = false;
   }
 
   showSavedContent(userId: string) {
+
     this.fileUploadService.getAllFiles(userId).pipe(take(1)).subscribe(
       (contents) => {
         if (contents && contents.length > 0) {
@@ -154,7 +180,13 @@ export class ContentComponent implements OnInit {
               const dateA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
               const dateB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
               return dateB - dateA;
-            });
+            })
+            .map(content => ({
+              ...content,  
+              displayName: content.createdName && content.createdName.trim() !== '' 
+                ? content.createdName
+                : content.filename  
+            }));
   
           this.contents = filterAndSortContent;
           console.log("Updated content list:", filterAndSortContent);
@@ -169,36 +201,66 @@ export class ContentComponent implements OnInit {
     );
   }
 
-  showContentById(contentId: string) {
-    const selectedContentById = this.contents.find(content => content._id === contentId)
-    if (selectedContentById) {
-      this.selectedContent = selectedContentById;
-      this.contentType = selectedContentById.type as ContentType;
-      this.showContent = true;
-      this.isAlreadySaved = true;
+editContent(contentId: string) {
+  const contentToEdit = this.contents.find(content => content._id === contentId);
 
-    } else {
-      this.selectedContent = undefined;
-      this.showContent = false;
-      this.isAlreadySaved = false;
-    }
+  if (contentToEdit){
+    this.selectedContent = contentToEdit;
+    this.selectedImageUrl = contentToEdit.fileurl;
+    this.contentType = ['image', 'video', 'invalid', 'noContent'].includes(contentToEdit.type)
+    ? contentToEdit.type as ContentType
+    : 'invalid';
+    this.showContent = true;
+    this.showInputChangeName = true;
+    this.isAlreadySaved = true;
+    this.isNotEditing = false;
+  } else {
+    this.selectedContent = undefined;
+    this.selectedImageUrl = undefined;
+    this.showContent = false;
+    this.isNotEditing = true;
+  }
 }
 
-// editContent(userId : string) {
-//   const userId = this.loginService.getUser();
-//   if (userId) {
+handleChangeContentName() {
+  if (this.selectedContent && this.contentForm) {
+    const updatedName = this.contentForm.get('newContentName')!.value;
 
-//   }
-// }
+    if (updatedName && updatedName.trim() !== '' ){
+      const isDuplicated = this.contents.some( content => content.createdName === updatedName.trim() || content.filename === updatedName.trim())
+
+      if(isDuplicated) {
+        console.log('This name is already in use.');
+        return;
+      }
+    }
+
+    if(updatedName !== null && updatedName !== ' '){
+
+      this.selectedContent!.createdName = updatedName;
+
+      this.fileUploadService.updateContent(this.selectedContent._id, updatedName)
+      .pipe(take(1)).subscribe(
+        (updatedContent) => {
+  
+            this.selectedContent!.createdName = updatedContent.createdName;
+            console.log("Updated selectedContent: ", this.selectedContent);
+        },
+        (error) => {
+          console.log("Error updating content name: ", error);
+        }
+      )
+    }
+  }
+}
 
   handleDeleteContent(content: Content): void { 
-
       const confirmRemove = this.dialog.open(ConfirmComponent,
         { data: { contentId : content._id }
       });
 
     confirmRemove.afterClosed().pipe(take(1)).subscribe( result => {
-      if (result === true ) {
+      if (result) {
         this.fileUploadService.deleteFile(content._id).subscribe(
           () => {
             console.log('Content deleted: ' , content._id);
@@ -212,7 +274,6 @@ export class ContentComponent implements OnInit {
   }
 
   deleteNoSavedContent() {
-
     if( this.isAlreadySaved) {
       return;
     }
@@ -226,8 +287,9 @@ export class ContentComponent implements OnInit {
     confirmRemove.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
         this.selectedContent = undefined;
-        this.showContent = false;
+        this.selectedImageUrl = undefined;
         this.isAlreadySaved = false;
+        this.contentType = 'noContent'; 
       }
     })
   }
