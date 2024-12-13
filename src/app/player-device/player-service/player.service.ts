@@ -1,17 +1,33 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { App } from '../../../media-player/src/App';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayerService {
 
-  constructor(private http: HttpClient) { }
+  private app: App|null = null;
 
-  private playerUrl = 'http://localhost:3000/api/playback-device/mediaplayer';
+  constructor() {
 
-  getMediaPlayer(){
-    return this.http.get(`${this.playerUrl}`, { responseType: 'text'});
+   }
+
+   initializePlayer(playlist: string[]): void {
+    this.app = new App(playlist);
+    this.app.run();
   }
+ 
+  resizeHandler(): void {
+    if (this.app) {
+      this.app['player']?.handleWindowResize();
+    }
+  }
+ 
+  errorHandler(): void {
+    if (this.app) {
+      this.app['player']?.errorHandler();
+    }
+  }
+
 }

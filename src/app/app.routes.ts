@@ -6,6 +6,7 @@ import { PlayerDeviceComponent } from './player-device/player-device.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { guardGuard } from '../auth-service/guard.guard';
+import { PlayerComponent } from './player/player.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -14,5 +15,7 @@ export const routes: Routes = [
     {path: "playlist", component: PlaylistComponent , title: "playlist", canActivate: [guardGuard]},
     {path: "player-device", component: PlayerDeviceComponent , title: "player-device", canActivate: [guardGuard]},
     {path: "login", component: LoginComponent , title: "login"},
-    {path: "register", component: RegisterComponent, title: "register"},   
+    {path: "register", component: RegisterComponent, title: "register"},  
+    // {path: "player", component: PlayerComponent, title: "player"},   
+
 ];

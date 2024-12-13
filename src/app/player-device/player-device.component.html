@@ -17,9 +17,10 @@
     </section>
 
     <section class="play-content-side" *ngIf="showContentFromPlaylist">
-        <div *ngIf="selectedPlaylist">
-            <p id="listNameText"> {{selectedPlaylist.name}} </p>
-            <div id="content" [innerHTML]="pageContent"></div>
+        <div class="player-container">
+            <app-player [playlist]="selectedPlaylist">
+
+            </app-player> 
         </div>
     </section>
 </section>

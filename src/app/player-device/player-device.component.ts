@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaylistService } from '../playlist/service/playlist.service';
 import { take } from 'rxjs';
-import { PlaylistItem, Playlists } from '../playlist/playlist.interface';
+import {  PlaylistItem, Playlists } from '../playlist/playlist.interface';
 import { CommonModule } from '@angular/common';
-import { LoginService } from '../../auth-service/login.service';
-import { PlayerService } from './player-service/player.service';
 import { Content } from '../content/content.interface';
+import { LoginService } from '../../auth-service/login.service';
+import { PlayerComponent } from '../player/player.component';
+import { PlayerService } from './player-service/player.service';
 
 @Component({
   selector: 'app-player-device',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PlayerComponent],
   templateUrl: './player-device.component.html',
   styleUrl: './player-device.component.scss'
 })
@@ -26,7 +27,7 @@ export class PlayerDeviceComponent implements OnInit {
   constructor(
     private playlistService: PlaylistService,
     private loginService: LoginService,
-    private playerService : PlayerService
+    private playerService: PlayerService
   ){}
 
   ngOnInit(){
@@ -59,13 +60,10 @@ export class PlayerDeviceComponent implements OnInit {
     this.showContentFromPlaylist = true;
     this.selectedPlaylist = this.playlists.find(playlist => playlist._id === playlistId) || null;
 
-    console.log(this.selectedPlaylist);
-
     if(this.selectedPlaylist) {
-      this.playerService.getMediaPlayer().subscribe(data => {
-        this.pageContent = data;
-   
-      });  
+      this.selectedPlaylist = playlistId;
+      const contentIds = this.selectedPlaylist.contentArray.map((item: PlaylistItem) => item.contentId);
+      this.playerService.initializePlayer(contentIds);
     }
   }
 }
