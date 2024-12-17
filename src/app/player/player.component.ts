@@ -1,6 +1,8 @@
-import { Component, OnInit, HostListener, input, OnChanges, Input } from '@angular/core';
-import { PlayerService } from '../player-device/player-service/player.service';
-import { Playlists } from '../playlist/playlist.interface';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
+import { PlayerService } from './player-service/player.service';
+import { PlaylistItem, Playlists } from '../playlist/playlist.interface';
+import { PlaylistService } from '../playlist/service/playlist.service';
+import { Content } from '../content/content.interface';
 
  
 @Component({
@@ -10,25 +12,20 @@ import { Playlists } from '../playlist/playlist.interface';
   standalone: true
 })
 export class PlayerComponent implements OnInit {
-
   @Input() playlist: Playlists | null = null;
+
  
-  constructor(private playerService: PlayerService) {}
- 
-  
+  constructor(
+    private playerService: PlayerService,
+    private playlistService: PlaylistService
+  ) {}
 
   ngOnInit(): void {
-    if(this.playlist && this.playlist.contentArray) {
-      const contentIds = this.playlist.contentArray.map(item => item.contentId);
-      this.playerService.initializePlayer(contentIds);
-      console.log(this.playerService.initializePlayer(contentIds));
-    }
-  }
 
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(): void {
     this.playerService.resizeHandler();
   }
-
 }

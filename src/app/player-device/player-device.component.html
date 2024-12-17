@@ -3,12 +3,12 @@
         <h3  id="playlistText">Playlist</h3>
         <div>
             <ul>
-                <li *ngFor="let playlist of playlists" id="playlistLI">
+                <li *ngFor="let playlist of playlists; trackBy: trackByPlaylistId" id="playlistLI">
                     <button id="iconArrowBtn">
                         <i class='fas fa-arrow-right'></i>
                     </button>
-                    <span id="namePlaylist" title="{{playlist.name}}"> {{ 'Name: ' + playlist.name}} </span>
-                    <button id="iconPlayBtn" (click)="playPlaylist(playlist._id)">
+                    <span id="namePlaylist" title="{{playlist.name}}">Name: {{playlist.name}} </span>
+                    <button id="iconPlayBtn" (click)="selectPlaylist(playlist._id)">
                         <i class='fas fa-play'></i>
                     </button>
                 </li>
@@ -18,8 +18,7 @@
 
     <section class="play-content-side" *ngIf="showContentFromPlaylist">
         <div class="player-container">
-            <app-player [playlist]="selectedPlaylist">
-
+            <app-player [playlist]="selectedPlaylist" >
             </app-player> 
         </div>
     </section>

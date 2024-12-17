@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlaylistItem, Playlists } from './playlist.interface';
 import { PlaylistService } from './service/playlist.service';
 import { take } from 'rxjs';
@@ -25,6 +25,7 @@ export class PlaylistComponent implements OnInit {
   playlists: Playlists[] = [];
   playlistNameControl = new FormControl('');
   playlist: any = { contents: [] };
+  playlistForm!: FormGroup;
 
   createdPlaylist: boolean = false;
   selectedPlaylist: any = null;
@@ -41,7 +42,7 @@ export class PlaylistComponent implements OnInit {
   ngOnInit():void {
     const userId = this.loginService.getUser();
     this.fetchPlaylists(userId);
-
+    this.playlistForm = new FormGroup({});
   }
 
   createPlaylist():void {
@@ -97,6 +98,33 @@ export class PlaylistComponent implements OnInit {
         this.playlists = [];
     })
   }
+
+  updatePlaylistName(playlistId: string): void {    
+    const newPlaylistName = this.playlistForm.get(playlistId)?.value;
+
+    if(!newPlaylistName || newPlaylistName.trim() === ' ') {
+      console.log('Playlist name is required');
+      return;
+    }
+
+    this.playlistService.changePlaylistName(playlistId, newPlaylistName)
+    .pipe(take(1))
+    .subscribe(
+      (response) => {
+        console.log("Playlist name updated!", response);
+
+        const playlist = this.playlists.find(p => p._id === playlistId);
+        if(playlist) {
+          playlist.name = newPlaylistName;
+        }
+        this.playlistForm.get(playlistId)?.reset();
+      },
+      (error) => {
+        console.log("Error updating playlist name", error);
+      }
+    )
+  }
+  
 
   loadPlaylistContent() {
     if (this.selectedPlaylist?.contentArray.length>0) {
@@ -171,6 +199,12 @@ editPlaylist(playlist: any): void {
   this.selectedPlaylist = {...playlist};
   this.isEditing = true;
   this.loadPlaylistContent();
+
+  if (!this.playlistForm.contains(playlist._id)) {
+    this.playlistForm.addControl(playlist._id, new FormControl(''));
+
+    console.log(this.playlistForm.controls);
+  }
 }
 
 deleteContentFromPlaylist(contentId: string): void {

@@ -9,9 +9,7 @@ export class PlayerService {
 
   private app: App|null = null;
 
-  constructor() {
-
-   }
+  constructor() {}
 
    initializePlayer(playlist: string[]): void {
     this.app = new App(playlist);

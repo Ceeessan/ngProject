@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Content } from './content.interface';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,7 +42,8 @@ export class ContentComponent implements OnInit {
     private dialog: MatDialog,
     private fileUploadService: FileUploadService,
     private loginService: LoginService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {}
 
   addFileHandler() {
@@ -72,9 +73,11 @@ export class ContentComponent implements OnInit {
 
     this.selectedContent = {
       ...this.createContentObject(file, fileUrl),
-      actualFile: file
+      actualFile: file,
     } 
     this.isNotEditing = true;
+    this.showContent = false;
+    this.isAlreadySaved = false;
   }
   
   private getContentType(fileType: string): ContentType {
@@ -170,7 +173,6 @@ export class ContentComponent implements OnInit {
   }
 
   showSavedContent(userId: string) {
-
     this.fileUploadService.getAllFiles(userId).pipe(take(1)).subscribe(
       (contents) => {
         if (contents && contents.length > 0) {
@@ -197,6 +199,7 @@ export class ContentComponent implements OnInit {
       (error) => {
         console.log("Failed to load content: ", error);
         this.contents = [];
+        this.showContent = true;
       }
     );
   }
@@ -242,9 +245,11 @@ handleChangeContentName() {
       this.fileUploadService.updateContent(this.selectedContent._id, updatedName)
       .pipe(take(1)).subscribe(
         (updatedContent) => {
-  
-            this.selectedContent!.createdName = updatedContent.createdName;
-            console.log("Updated selectedContent: ", this.selectedContent);
+            const index = this.contents.findIndex(c => c._id === updatedContent._id);
+            if (index > -1) {
+              this.contents[index].createdName = updatedContent.createdName;
+              this.cdr.detectChanges();
+            }
         },
         (error) => {
           console.log("Error updating content name: ", error);

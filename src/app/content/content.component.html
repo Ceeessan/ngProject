@@ -106,7 +106,7 @@
         <div [ngSwitch]="contentType" id="showContent">
           <div *ngIf="showContent">
             <ng-container  *ngSwitchCase = "'image'" >
-              <img id="imageContentShow" [src]="selectedImageUrl"  alt="Selected content img">
+              <img id="imageContentShow" [src]="selectedImageUrl"  alt="Selected content img show" >
             </ng-container>
     
             <ng-container  *ngSwitchCase = "'video'" >

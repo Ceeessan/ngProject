@@ -41,6 +41,8 @@ export class FileUploadService {
   }
 
   updateContent(contentId: string, createdName: string | FormData): Observable<any>{
+
+    console.log("Sending update with:", { contentId, createdName }); 
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`.trim() ,
@@ -53,6 +55,18 @@ export class FileUploadService {
 
     return this.http.put<any>(`${this.contentUrl}/${contentId}`, body, {headers})
   }
+
+  //Get url-string by ID here:
+
+  getUrlFileId(contentId : string): Observable<Content> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`.trim()
+    });
+
+    return this.http.get<Content>(`${this.contentUrl}/${contentId}`, {headers});
+  }
+
 
   deleteFile(contentId: string): Observable<any> {
     const token = localStorage.getItem('token');

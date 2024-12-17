@@ -38,9 +38,16 @@
     
     <div class="playlist-right-container">
         <div class="playlist-edit-panel" *ngIf="isEditing">
-            <div class="btns-handle-edit">
-                <button id="saveBtn"> Save </button>
-                <input type="name" id="changeNamePlaylistInput" placeholder="New name for playlist"/>
+            <div *ngIf="selectedPlaylist">
+                <form (ngSubmit)="updatePlaylistName(selectedPlaylist._id)" [formGroup]="playlistForm">
+                    <div class="btns-handle-edit">    
+                        <input type="name" 
+                        formControlName="{{selectedPlaylist._id}}"
+                        id="changeNamePlaylistInput" placeholder="New name for playlist"/>
+                        <button id="saveBtn" 
+                        type="submit"> Save </button>
+                    </div>
+                </form>
             </div>
             <div class="playlist-info-container">
                 <div class="info-container">
@@ -64,7 +71,6 @@
                                 [(ngModel)]="content.duration"
                                 />
                                 <button  id="durationBtn" (click)="updateDuration(content._id, content.duration)">Set duration</button>
-                                <span id="durationSeconds">{{ content.duration }} seconds</span>
                         </div>
                                 
                         <button id="listDeleteContent" (click)="deleteContentFromPlaylist(content._id)">

@@ -7,6 +7,7 @@ export interface Playlists {
   }
 
 export type PlaylistItem = {
+  _id: string;
   contentId: string;
   duration: number;
 }

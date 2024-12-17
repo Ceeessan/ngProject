@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PlaylistItem, Playlists } from '../playlist.interface';
 import { Content } from '../../content/content.interface';
+import { url } from 'node:inspector';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,17 @@ export class PlaylistService {
     return this.http.post<Content[]>(`${this.playlistUrl}/contents`, {playlistItems: contentIds}, { headers });
   }
 
+  getContentUrlByIds(playlistId: string, contentId: string): Observable<Content> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`.trim()
+    });
+  
+    console.log("Sending playlistId", playlistId, "Sending contentId:", contentId);
+  
+    return this.http.get<Content>(`${this.playlistUrl}/${playlistId}/content/${contentId}`, { headers });
+  }
+
   addContentToPlaylist(playlistId: string, contentId: string){
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
@@ -67,6 +79,19 @@ export class PlaylistService {
     const url = `${this.playlistUrl}/${playlistId}/content/${contentId}/duration`;
     const body = {duration};
     return this.http.put<any>(url, body, {headers})
+  }
+
+  changePlaylistName(playlistId: string, newName: string) {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`.trim()
+    })
+
+    const name = {name: newName}
+
+    const url = `${this.playlistUrl}/${playlistId}/name`;
+
+    return this.http.put(url, name, {headers});
   }
 
   deletePlaylist(playlistId:string): Observable<any>{
