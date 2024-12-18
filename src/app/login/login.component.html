@@ -26,6 +26,7 @@
                 placeholder="Password"
                 type="password"
                 name="password"
+                autocomplete="current-password"
                 />
                 <em *ngIf="loginForm.get('loginPassword')?.invalid && (loginForm.get('loginPassword')?.dirty || loginForm.get('loginPassword')?.touched)" id="passwordError">
                     *Password is required, at least 10 characters

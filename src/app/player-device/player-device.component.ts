@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaylistService } from '../playlist/service/playlist.service';
-import { forkJoin, take, tap } from 'rxjs';
+import { forkJoin, map, take, tap } from 'rxjs';
 import {  PlaylistItem, Playlists } from '../playlist/playlist.interface';
 import { CommonModule } from '@angular/common';
 import { Content } from '../content/content.interface';
@@ -21,7 +21,7 @@ export class PlayerDeviceComponent implements OnInit {
   showContentFromPlaylist: boolean = false;
   selectedPlaylist: any = null;
   content: any = null;
-  contentUrls: string[] = [];
+  contentUrls: string[] | string = [];
 
   constructor(
     private playlistService: PlaylistService,
@@ -67,24 +67,25 @@ export class PlayerDeviceComponent implements OnInit {
       this.showContentFromPlaylist = true;
 
       const contentIdRequests = this.selectedPlaylist.contentArray.map((item: PlaylistItem) => {
-        console.log('item log: ', item);
         return this.playlistService.getContentUrlByIds(this.selectedPlaylist._id, item.contentId);
       });
 
       forkJoin<Content[]>(contentIdRequests).pipe(
-        tap((content) => {console.log('content string helloooo',content);
-        })
-      )
-        .subscribe(
-        (contents: Content[]) => {
-          console.log(contents);
-          this.contentUrls = contents.map((content) => {
-            console.log(content);
-            return content.fileurl;
+        map((contents) => {
+          console.log('helloooo content: ', contents);
+          const fileUrls = contents.map((content) => {
+            const contentUrl = content.fileurl;
+            return`http://localhost:3000/${contentUrl}`
           });
-          this.playerService.initializePlayer(this.contentUrls);
+          return fileUrls;
+        }),
+        tap((response) => console.log('urls!: ',response))
+      ). subscribe({
+        next: (fileUrls) => {
+          console.log('file urls: ', fileUrls);
+          this.playerService.initializePlayer(fileUrls);
         }
-      )
+      })
     }
   }
     
