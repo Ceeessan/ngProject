@@ -1,6 +1,6 @@
 <section class="player-device-page">
     <section class="list-side">
-        <h3  id="playlistText">Playlist</h3>
+        <h3  id="playlistText">Playlists</h3>
         <div>
             <ul>
                 <li *ngFor="let playlist of playlists; trackBy: trackByPlaylistId" id="playlistLI">
@@ -20,9 +20,6 @@
         <div>
             <h3 id="listNameText"> {{selectedPlaylist?.name}} </h3>
         </div>
-        <div class="player-container" >
-            <app-player >
-            </app-player> 
-        </div>
+        <app-player ></app-player> 
     </section>
 </section>
