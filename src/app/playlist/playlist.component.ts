@@ -144,6 +144,12 @@ export class PlaylistComponent implements OnInit {
     }
   }
 
+  isImage(fileurl: string): boolean{
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    const fileExtension = fileurl.split('.').pop()?.toLowerCase() || '';
+    return imageExtensions.includes(fileExtension);
+  }
+
   updateDuration(contentId: string, newDuration: number): void {
     if (!this.selectedPlaylist) {
       console.log("No playlist selected");
