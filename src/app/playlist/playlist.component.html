@@ -61,9 +61,13 @@
                 <p id="playlistContentText"> Playlist Content</p>
                 <ul>
                     <li id="content-in-playlist" *ngFor="let content of playlistContents">
-                        <img id="contentImg" [src]="content.fileurl" alt="ContentImage"/>
-                        <p id="contentFilename" [title]="content.createdName">{{'Name: ' + content.createdName}}</p> 
-                        
+                        <ng-container *ngIf="isImage(content.fileurl); else videoThumbnail">
+                            <img id="contentImg" [src]="content.fileurl" alt="ContentImage"/>
+                        </ng-container>
+                        <ng-template #videoThumbnail>
+                            <video id="contentVideo" [src]="content.fileurl" muted paused></video>
+                          </ng-template>
+                          <p id="contentFilename" [title]="content.createdName">{{'Name: ' + content.createdName}}</p> 
                         <div>
                             <input 
                                 id="durationInput"
