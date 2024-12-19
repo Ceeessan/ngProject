@@ -27,8 +27,7 @@
                     id="urlVideo" 
                     [src]="content.fileurl"  
                     title="{{content.fileurl}}"
-                    autoplay
-                    muted
+                    pause
                     >
                   </video>
                 </div>
@@ -82,7 +81,7 @@
             </ng-container>
     
             <ng-container  *ngSwitchCase = "'video'" >
-              <video id="videoContent" [src]="selectedContent?.fileurl" ></video>
+              <video id="videoContent" [src]="selectedContent?.fileurl" autoplay muted></video>
             </ng-container>
     
             <ng-container id="invalidContent" *ngSwitchCase = "'invalid'" >
@@ -110,7 +109,7 @@
             </ng-container>
     
             <ng-container  *ngSwitchCase = "'video'" >
-              <video id="videoContentShow" [src]="selectedImageUrl" ></video>
+              <video id="videoContentShow" [src]="selectedImageUrl" autoplay muted></video>
             </ng-container>
     
             <ng-container id="invalidContentShow" *ngSwitchCase = "'invalid'" >
