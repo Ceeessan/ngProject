@@ -32,6 +32,7 @@ export class PlaylistComponent implements OnInit {
   isEditing: boolean = false;
   showErrorMsg: boolean = false;
   playlistContents : Content[] = [];
+  emptyPlaylist:boolean = false;
 
   constructor(
     private playlistService: PlaylistService,
@@ -59,7 +60,7 @@ export class PlaylistComponent implements OnInit {
       console.log("A playlist with this name already exists");
       this.showErrorMsg = true;
       setTimeout(() => {
-        this.showErrorMsg = false; 
+        this.showErrorMsg = true; 
       },2000);
       return;
     }
@@ -127,6 +128,15 @@ export class PlaylistComponent implements OnInit {
   
 
   loadPlaylistContent() {
+
+    this.playlistContents = [];
+
+    if(  this.emptyPlaylist = !this.selectedPlaylist || !this.selectedPlaylist.contentArray?.length ){
+      this.emptyPlaylist = true;
+    } else {
+      this.playlistContents= [];
+    }
+
     if (this.selectedPlaylist?.contentArray.length>0) {
       console.log("Sending contentIds:");
       this.playlistService.getContentByIds(this.selectedPlaylist.contentArray).subscribe(
@@ -192,7 +202,8 @@ export class PlaylistComponent implements OnInit {
       this.playlistService.deletePlaylist(playlistId).subscribe(
         () => {
           console.log('Playlist deleted: ' , playlistId);
-          this.playlists = this.playlists.filter( c => c._id !== playlistId)
+          this.playlists = this.playlists.filter( c => c._id !== playlistId);
+          this.isEditing = false;
       },
     (error) => {
       console.log("Error deleting playlist", error);

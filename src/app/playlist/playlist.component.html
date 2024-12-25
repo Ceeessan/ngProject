@@ -59,6 +59,7 @@
 
             <div class="playlist-content-list">
                 <p id="playlistContentText"> Playlist Content</p>
+                <p *ngIf="emptyPlaylist" id="noContentYet"> No content in the playlist yet.</p> 
                 <ul>
                     <li id="content-in-playlist" *ngFor="let content of playlistContents">
                         <ng-container *ngIf="isImage(content.fileurl); else videoThumbnail">
@@ -83,7 +84,7 @@
                         </li>
                     </ul>
                 </div>
-            </div>  
+            </div> 
         </div>
     </div>
 </section>

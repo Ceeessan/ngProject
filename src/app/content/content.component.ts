@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Content } from './content.interface';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
@@ -43,7 +43,8 @@ export class ContentComponent implements OnInit {
     private fileUploadService: FileUploadService,
     private loginService: LoginService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private elementRef: ElementRef
   ) {}
 
   addFileHandler() {
@@ -299,15 +300,23 @@ handleChangeContentName() {
     })
   }
 
-toggleDropdown(contentId: string): void {
-
-  if(this.activeDropdownContentId === contentId) {
-    this.activeDropdownContentId = null;
-  } else {
-    this.activeDropdownContentId = contentId;
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+  const clickedInside = this.elementRef.nativeElement.contains(event.target);
+  if (!clickedInside) {
+    console.log('Document clicked');
+    this.activeDropdownContentId = null; 
   }
 }
 
+  toggleDropdown(contentId: string): void {
+    if (this.activeDropdownContentId === contentId) {
+      this.activeDropdownContentId = null; 
+    } else {
+      this.activeDropdownContentId = contentId;
+    }
+  }
+  
 openAddToPlaylistModal(contentId: string): void {
   const dialogRef = this.dialog.open(ContentPlaylistModalComponent, {
     data: {contentId}

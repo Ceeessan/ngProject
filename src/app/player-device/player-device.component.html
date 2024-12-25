@@ -15,11 +15,11 @@
             </ul>
         </div>  
     </section>
-
+    
+    <div>
+        <h3 id="listNameText"> {{selectedPlaylist?.name}} </h3>
+    </div>
     <section class="play-content-side" *ngIf="showContentFromPlaylist">
-        <div>
-            <h3 id="listNameText"> {{selectedPlaylist?.name}} </h3>
-        </div>
         <app-player ></app-player> 
     </section>
 </section>

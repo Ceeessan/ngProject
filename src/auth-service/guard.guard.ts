@@ -13,5 +13,4 @@ export const guardGuard: CanActivateFn = (route, state) => {
     router.navigate(['/login']);
     return false;
   }
-  
 };

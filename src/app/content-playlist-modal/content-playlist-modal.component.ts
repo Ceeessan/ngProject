@@ -48,8 +48,7 @@ export class ContentPlaylistModalComponent implements OnInit{
           this.playlists = filterAndSortPlaylists;
         } else {
           this.playlists = [];
-        }
-        
+        } 
       },
       error: (err) => {
         console.log("Failed to load playlists", err);
@@ -74,5 +73,4 @@ export class ContentPlaylistModalComponent implements OnInit{
       }
     })
   }
-
 }

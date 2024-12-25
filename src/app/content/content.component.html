@@ -37,33 +37,33 @@
                 </div>
                 <span id="nameContent" title="{{content.createdName}}"> {{ 'Name: ' + content.createdName}}  </span>
 
+                
                 <i 
                 id="editIcon" 
                 class="far fa-edit"
-                (click)="toggleDropdown(content._id)"
-                ></i>
+                  (click)="toggleDropdown(content._id);"></i>
                 <div class="dopdown-values" *ngIf="activeDropdownContentId === content._id">
                   <span id="editContent">
                     Edit Content
                     <button id="editBtn"
-                    (click)="editContent(content._id)">
+                      (click)="editContent(content._id)">
                       <i id="edit" class="far fa-edit"></i>
                     </button>
                   </span>
-
-                  <span id="addToPlaylistBtn">
-                    Add to Playlist 
-                    <button id="addIconBtn"
-                    (click)="addToPlaylist(content._id)">
-                      <i id="addIcon" class="material-icons">add_circle</i>
-                    </button>
-                  </span>
-                </div>
-              
-                <a title="Delete" id="trashIcon" (click)="handleDeleteContent(content)"><i class="fa fa-trash"></i></a>
+    
+                      <span id="addToPlaylistBtn">
+                        Add to Playlist 
+                        <button id="addIconBtn"
+                        (click)="addToPlaylist(content._id)">
+                          <i id="addIcon" class="material-icons">add_circle</i>
+                        </button>
+                      </span>
+                    </div>
+                
+                  <a title="Delete" id="trashIcon" (click)="handleDeleteContent(content)"><i class="fa fa-trash"></i></a>
             </li>
           </ul>
-       </div>
+      </div> 
   </section>
 
   <div class="content-container">
@@ -74,50 +74,52 @@
         <button title="Delete content" [disabled]="!selectedContent || isAlreadySaved" (click)="deleteNoSavedContent()" id="deleteContent">Delete</button>
       </div>
 
-        <div [ngSwitch]="contentType" id="content">
-          <div *ngIf="isNotEditing">
-            <ng-container  *ngSwitchCase = "'image'" >
-              <img id="imageContent" [src]="selectedContent?.fileurl"  alt="Selected content img">
-            </ng-container>
+      <div [ngSwitch]="contentType" id="content">
+        <div *ngIf="isNotEditing">
+          <ng-container  *ngSwitchCase = "'image'" >
+            <img id="imageContent" [src]="selectedContent?.fileurl"  alt="Selected content img">
+          </ng-container>
     
-            <ng-container  *ngSwitchCase = "'video'" >
-              <video id="videoContent" [src]="selectedContent?.fileurl" autoplay muted></video>
-            </ng-container>
+          <ng-container  *ngSwitchCase = "'video'" >
+            <video id="videoContent" [src]="selectedContent?.fileurl" autoplay muted></video>
+          </ng-container>
     
-            <ng-container id="invalidContent" *ngSwitchCase = "'invalid'" >
-              <p> Sorry! The content did not work to upload. </p>
-            </ng-container>
+          <ng-container id="invalidContent" *ngSwitchCase = "'invalid'" >
+            <p> Sorry! The content did not work to upload. </p>
+          </ng-container>
     
-            <ng-container id="noContent" *ngSwitchCase = "'noContent'" >
-            </ng-container>
-          </div>
+          <ng-container id="noContent" *ngSwitchCase = "'noContent'">
+          </ng-container>
         </div>
+      </div>
     </section>
   
-      <section class="show-content-container">
-        <form 
-        (ngSubmit)="handleChangeContentName()"*ngIf="showInputChangeName"
-        [formGroup]="contentForm" class="change-name-container">
+    <section class="show-content-container">
+      <form
+      *ngIf="activeDropdownContentId"
+      (ngSubmit)="handleChangeContentName()"
+      [formGroup]="contentForm" class="change-name-container">
+        <div *ngIf="showInputChangeName">
           <input type="text" id="changeNameInput"  name="filename" formControlName="newContentName" />
           <button type="submit" title="Save name" id="saveNewTextBtn">Save</button>
-        </form>
-    
-        <div [ngSwitch]="contentType" id="showContent">
-          <div *ngIf="showContent">
-            <ng-container  *ngSwitchCase = "'image'" >
-              <img id="imageContentShow" [src]="selectedImageUrl"  alt="Selected content img show" >
-            </ng-container>
-    
-            <ng-container  *ngSwitchCase = "'video'" >
-              <video id="videoContentShow" [src]="selectedImageUrl" autoplay muted></video>
-            </ng-container>
-    
-            <ng-container id="invalidContentShow" *ngSwitchCase = "'invalid'" >
-              <p> Sorry! The content did not work to upload. </p>
-            </ng-container>
-          </div>
         </div>
-      </section>
+      </form>
+    
+      <div [ngSwitch]="contentType" id="showContent">
+        <div *ngIf="showContent">
+          <ng-container  *ngSwitchCase = "'image'" >
+            <img id="imageContentShow" [src]="selectedImageUrl"  alt="Selected content img show" >
+          </ng-container>
+    
+          <ng-container  *ngSwitchCase = "'video'" >
+            <video id="videoContentShow" [src]="selectedImageUrl" autoplay muted></video>
+          </ng-container>
+    
+          <ng-container id="invalidContentShow" *ngSwitchCase = "'invalid'" >
+            <p> Sorry! The content did not work to upload. </p>
+          </ng-container>
+        </div>
+      </div>
+    </section>
   </div>
 </section>
-

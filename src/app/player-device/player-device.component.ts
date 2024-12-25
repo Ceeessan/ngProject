@@ -19,9 +19,10 @@ export class PlayerDeviceComponent implements OnInit {
 
   playlists: Playlists[] = [];
   showContentFromPlaylist: boolean = false;
-  selectedPlaylist: any = null;
+  selectedPlaylist: Playlists | null = null;
   content: any = null;
   contentUrls: string[] | string = [];
+  currentPlaylistId: string | null = null;
 
   constructor(
     private playlistService: PlaylistService,
@@ -36,7 +37,6 @@ export class PlayerDeviceComponent implements OnInit {
 
   fetchPlaylists(userId: string): void {
     this.playlistService.getPlaylists(userId).pipe(take(1)).subscribe((playlists) => {
-      console.log('Fetched playlists:', playlists);
       if( playlists && playlists.length > 0) {
         const filterAndSortPlaylist = playlists
         .filter(playlist => playlist.userId === userId)
@@ -56,6 +56,12 @@ export class PlayerDeviceComponent implements OnInit {
   }
 
   selectPlaylist(playlistId:string): void {
+
+    if(this.currentPlaylistId === playlistId) {
+      console.log("This playlist is already playing!");
+      return;
+    }
+
     if (this.selectedPlaylist?._id === playlistId) {
       console.log('Already selected this playlist!');
       return; 
@@ -67,27 +73,33 @@ export class PlayerDeviceComponent implements OnInit {
       this.showContentFromPlaylist = true;
 
       const contentIdRequests = this.selectedPlaylist.contentArray.map((item: PlaylistItem) => {
-        return this.playlistService.getContentUrlByIds(this.selectedPlaylist._id, item.contentId);
+        const content = this.playlistService.getContentUrlByIds(this.selectedPlaylist!._id, item.contentId);
+        return content;
       });
 
       forkJoin<Content[]>(contentIdRequests).pipe(
         map((contents) => {
-          console.log('helloooo content: ', contents);
+          console.log(contents);
           const fileUrls = contents.map((content) => {
             const contentUrl = content.fileurl;
-            return`http://localhost:3000/${contentUrl}`
+            const duration = this.selectedPlaylist?.contentArray.find(item => item.contentId === content._id)?.duration;
+            return {  
+              url: `http://localhost:3000/${contentUrl}`, 
+              duration: duration
+            };
           });
           return fileUrls;
         }),
-        tap((response) => console.log('urls!: ',response))
-      ). subscribe({
-        next: (fileUrls) => {
-          console.log('file urls: ', fileUrls);
+        tap((fileUrls) => {
           this.playerService.initializePlayer(fileUrls);
-        }
-      })
+        })
+      ). subscribe(() => {},
+    (error) => {
+      console.log("Failed to load content:", error);
+    })
     }
   }
+  
     
   trackByPlaylistId(index: number, playlist: Playlists): string {
     return playlist._id;

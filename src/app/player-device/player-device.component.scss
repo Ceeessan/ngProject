@@ -45,18 +45,22 @@
         }
     }
 
+    #listNameText{
+        padding: 2rem;
+        font-size: 1.7rem;
+        color: rgb(36, 36, 36);
+    }
+
     .play-content-side{
         display:flex;
         justify-content: center;
         flex-direction: column;
         align-items: center;
-        max-width: 70%;
-        margin-left: 40rem;
-        background-color: green;
-
-        #listNameText{
-            margin-top: 4rem;
-            margin-bottom: 2rem;
-        }
+        max-width: 100%;
+        height: 36rem;
+        margin-top: 10rem;
+        margin-left: 12rem;
+        background-color: rgb(231, 231, 231);
+        padding: 4rem;
     }
 }

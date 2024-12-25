@@ -230,6 +230,13 @@ section{
                 &::-webkit-scrollbar-thumb {
                     background: rgba(0, 0, 0, 0.3);
                 }
+                #noContentYet {
+                    font-size: 0.7rem;
+                    margin-right: 9.8rem;
+                    padding-top:0rem;
+                    margin-bottom: -1rem;
+                    display:block;
+                  }
 
                 #content-in-playlist{
                     display:flex;
