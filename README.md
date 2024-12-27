@@ -1,4 +1,4 @@
-# myCMS-project
+# ngProject
 
 This is the frontend for **myCMS**, a web application that provides a small digital signage solution. This project was created during my internship and is responsible for the user interface (UI), user experience (UX), and handling API requests to the backend.
 
@@ -39,4 +39,4 @@ npm install -g @angular/cli
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ceeessan/myCMS-project.git  
+   git clone https://github.com/ceeessan/ngProject.git  
