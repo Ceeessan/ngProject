@@ -55,28 +55,25 @@ export class PlayerDeviceComponent implements OnInit {
     })
   }
 
-  selectPlaylist(playlistId:string): void {
-
-    if(this.currentPlaylistId === playlistId) {
-      console.log("This playlist is already playing!");
+  selectPlaylist(playlistId: string): void {
+    console.log('selectPlaylist called');
+  
+    if (this.selectedPlaylist && this.selectedPlaylist._id === playlistId) {
+      console.log('Den här spellistan är redan vald!');
       return;
     }
 
-    if (this.selectedPlaylist?._id === playlistId) {
-      console.log('Already selected this playlist!');
-      return; 
-    }
-
+    this.playerService.stopCurrentContent();
+  
     this.selectedPlaylist = this.playlists.find((playlist) => playlist._id === playlistId) || null;
-
+  
     if (this.selectedPlaylist && this.selectedPlaylist.contentArray) {
       this.showContentFromPlaylist = true;
-
+ 
       const contentIdRequests = this.selectedPlaylist.contentArray.map((item: PlaylistItem) => {
-        const content = this.playlistService.getContentUrlByIds(this.selectedPlaylist!._id, item.contentId);
-        return content;
+        return this.playlistService.getContentUrlByIds(this.selectedPlaylist!._id, item.contentId);
       });
-
+  
       forkJoin<Content[]>(contentIdRequests).pipe(
         map((contents) => {
           console.log(contents);
@@ -91,12 +88,15 @@ export class PlayerDeviceComponent implements OnInit {
           return fileUrls;
         }),
         tap((fileUrls) => {
+
           this.playerService.initializePlayer(fileUrls);
         })
-      ). subscribe(() => {},
-    (error) => {
-      console.log("Failed to load content:", error);
-    })
+      ).subscribe(
+        () => {},
+        (error) => {
+          console.log("Failed to load content:", error);
+        }
+      );
     }
   }
   

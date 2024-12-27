@@ -11,15 +11,24 @@ export class PlayerService {
 
   constructor(  ) {}
 
-   initializePlayer(playlist: item[]): void {
+  initializePlayer(playlist: item[]): void {
+    if (this.app) {
+        this.app.stopCurrentContent();  
+    }
     this.app = new App(playlist);
-    this.app.run();
+    this.app.run(); 
     console.log(playlist);
-  }
+}
  
   resizeHandler(): void {
     if (this.app) {
       this.app['player']?.handleWindowResize();
+    }
+  }
+
+  public stopCurrentContent(): void {
+    if (this.app) {
+        this.app.stopCurrentContent();
     }
   }
  

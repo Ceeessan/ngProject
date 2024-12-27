@@ -1,9 +1,7 @@
 import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { PlayerService } from './player-service/player.service';
 import { CommonModule } from '@angular/common';
-import { ContentLoader, Player } from '../../media-player/src/mediaPlayer';
-import { PlaylistItem } from '../playlist/playlist.interface';
-
+import { Player } from '../../media-player/src/mediaPlayer';
  
 @Component({
   selector: 'app-player',
