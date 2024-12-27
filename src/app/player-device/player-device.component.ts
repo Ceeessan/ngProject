@@ -23,6 +23,7 @@ export class PlayerDeviceComponent implements OnInit {
   content: any = null;
   contentUrls: string[] | string = [];
   currentPlaylistId: string | null = null;
+  noContent: boolean = false;
 
   constructor(
     private playlistService: PlaylistService,
@@ -56,16 +57,23 @@ export class PlayerDeviceComponent implements OnInit {
   }
 
   selectPlaylist(playlistId: string): void {
-    console.log('selectPlaylist called');
   
     if (this.selectedPlaylist && this.selectedPlaylist._id === playlistId) {
-      console.log('Den här spellistan är redan vald!');
+      console.log('This playlist is already playing');
       return;
     }
 
     this.playerService.stopCurrentContent();
   
     this.selectedPlaylist = this.playlists.find((playlist) => playlist._id === playlistId) || null;
+
+    if (!this.selectedPlaylist || !this.selectedPlaylist.contentArray || this.selectedPlaylist.contentArray.length === 0) {
+      this.noContent = true;
+      this.showContentFromPlaylist = false; 
+    } else {
+      this.noContent = false;
+      this.showContentFromPlaylist = true;  
+    }
   
     if (this.selectedPlaylist && this.selectedPlaylist.contentArray) {
       this.showContentFromPlaylist = true;
@@ -99,7 +107,6 @@ export class PlayerDeviceComponent implements OnInit {
       );
     }
   }
-  
     
   trackByPlaylistId(index: number, playlist: Playlists): string {
     return playlist._id;

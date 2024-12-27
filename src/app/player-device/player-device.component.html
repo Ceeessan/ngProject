@@ -20,6 +20,9 @@
         <h3 id="listNameText"> {{selectedPlaylist?.name}} </h3>
     </div>
     <section class="play-content-side" *ngIf="showContentFromPlaylist">
-        <app-player ></app-player> 
+        <div *ngIf="noContent" id="noContent">
+            <p> No content is added in this playlist. Please add content to show the playlist</p>
+        </div>
+            <app-player ></app-player> 
     </section>
 </section>
