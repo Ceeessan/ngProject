@@ -1,27 +1,42 @@
-# NgProject
+# myCMS-project
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.10.
+This is the frontend for **myCMS**, a web application that provides a small digital signage solution. This project was created during my internship and is responsible for the user interface (UI), user experience (UX), and handling API requests to the backend.
 
-## Development server
+## Table of Contents
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
 
-## Code scaffolding
+## Technologies Used
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This project is built using the following technologies:
 
-## Build
+- [Angular](https://angular.io/) - A platform and framework for building client-side applications with HTML, CSS, and TypeScript.
+- [CSS/SCSS](https://sass-lang.com/) - For styling the user interface.
+- - [Node.js](https://nodejs.org/) - JavaScript runtime used for running the build tools and server-side code.
+- [npm](https://www.npmjs.com/) - A package manager that comes with Node.js and is used for managing project dependencies.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Getting Started
 
-## Running unit tests
+To get this project up and running locally, follow the steps below.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Prerequisites
 
-## Running end-to-end tests
+Make sure you have the following installed on your machine:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- [Node.js](https://nodejs.org/) (version 16.x.x or higher)
+- [npm](https://www.npmjs.com/) (Node package manager) - usually comes with Node.js
+- [Angular CLI](https://angular.io/cli) - Angular's command line interface for creating and managing Angular applications
 
-## Further help
+### Installation
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+To install Angular CLI globally, you can run the following command:
+
+```bash
+npm install -g @angular/cli
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ceeessan/myCMS-project.git  
